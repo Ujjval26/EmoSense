@@ -4,19 +4,31 @@ import { Link } from "react-router-dom";
 import { FcGoogle } from "react-icons/fc";
 import { BsFacebook } from "react-icons/bs";
 import signup from "../assets/images/signup.png"
+import { BsLightningChargeFill } from "react-icons/bs";
 import signup1 from "../assets/images/signup_1.png"
+import {  Input } from 'antd';
 const Signup = () => {
+
   return (
     <section className="bg-[#F0F2F5]">
       <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet"></link>
 
-      <div className="lg:grid lg:grid-cols-2 md:grid md:grid-cols-2 min-h-screen" style={{ gridTemplateColumns: '40% 60%' }}>
-        <div className='relative max-h-screen min-h-screen overflow-hidden sticky top-0'>
-        <img src={signup} alt="signup" className="w-full min-h-screen max-h-screen object-cover" />
+      <div className="lg:grid lg:grid-cols-2 md:grid md:grid-cols-1 min-h-screen" style={{ gridTemplateColumns: '40% 60%' }}>
+        <div className='relative max-h-screen min-h-screen overflow-hidden lg:sticky top-0 lg:inline md:hidden sm:hidden xl:inline hidden'>
+          <img src={signup} alt="signup" className="w-full min-h-screen max-h-screen object-cover" />
           <div className="flex items-center justify-left pl-12 w-full rounded-lg">
-            <div className="absolute bottom-48 p-4 grid items-center justify-center w-[40%] bg-black bg-opacity-10  backdrop-filter backdrop-blur-lg rounded-lg">
-              <img src={signup1} className='w-8 h-8'/>
-                <p className='text-sm text-[#000] rounded-lg'>Ready to dive back into the world of emotions? Log in effortlessly and resume your personalized journey with EmoSense. Your emotions, our technology — let's continue this exploration together.</p>
+            <div className="absolute top-48 py-2 flex items-center justify-center w-[54%] bg-[#20DC49] rounded-[42px] rounded-lg">
+              <div className='rounded-full bg-black bg-opacity-10 backdrop-blur-xl p-3'>
+                <BsLightningChargeFill className="text-[#000] text-lg" />
+              </div>
+
+              <p className='text-sm text-[#000] ml-2 rounded-lg'>Real time Image Processing</p>
+            </div>
+          </div>
+          <div className="flex items-center justify-left pl-12 w-full rounded-lg">
+            <div className="absolute top-64 p-4 grid items-center justify-center w-[40%] bg-white bg-opacity-10  backdrop-filter backdrop-blur-lg rounded-lg">
+              <img src={signup1} className='w-8 h-8' />
+              <p className='text-sm text-[#000] rounded-lg'>Ready to dive back into the world of emotions? Log in effortlessly and resume your personalized journey with EmoSense. Your emotions, our technology — let's continue this exploration together.</p>
             </div>
           </div>        </div>
         <div>
@@ -39,23 +51,27 @@ const Signup = () => {
               </div><br></br>
             </div>
           </section>
-          <form className="max-w-sm mx-auto">
+          <form className="max-w-sm mx-auto px-12 lg:px-0">
             <div className="mb-5">
-              <input type="text" id="name" className="bg-white p-4 border border-gray-300 w-full rounded-md outline-none" placeholder="Enter Name" required />
+            <Input placeholder="Name" className='bg-white p-4 border border-gray-300 w-full rounded-md outline-none' />
+                        </div>
+            <div className="mb-5">
+            <Input placeholder="Email" className='bg-white p-4 border border-gray-300 w-full rounded-md outline-none' />
             </div>
             <div className="mb-5">
-              <input type="email" id="email" className="bg-white p-4 border border-gray-300 w-full rounded-md outline-none" placeholder="Enter Email" required />
+            <Input.Password placeholder="Password" className='bg-white p-4 border border-gray-300 w-full rounded-md outline-none'/>
             </div>
             <div className="mb-5">
-              <input type="password" id="password" className="bg-white p-4 border border-gray-300 w-full rounded-md outline-none" placeholder="Password" required />
-            </div>
-            <div className="mb-5">
-              <input type="password" id="confirmPassword" className="bg-white p-4 border border-gray-300 w-full rounded-md outline-none" placeholder="Confirm Password" required />
-            </div>
+              <Input.Password placeholder="Retype Password" className='bg-white p-4 border border-gray-300 w-full rounded-md outline-none'/>
+              {/* <Input.Password
+                placeholder="input password"
+                iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
+              />   */}
+                        </div>
 
             <button type="submit" className="border border-[#20DC49] items-center text-white bg-[#20DC49] rounded-md w-full px-8 py-2">Create Account</button>
           </form><br></br>
-          <div className='w-full'>
+          <div className='w-full px-12'>
             <p className='text-center text-gray-800 text-sm'>By continuing you indicate that you read and agreed to the Terms of Use</p>
           </div>
           <br></br>

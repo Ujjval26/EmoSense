@@ -4,6 +4,8 @@ import { Switch } from 'antd';
 import login from "../assets/images/login.png"
 import { Link } from "react-router-dom";
 import logo from "../assets/images/logo.png";
+import {  Input } from 'antd';
+
 const Login = () => {
   const onChange = (checked) => {
     console.log(`switch to ${checked}`);
@@ -32,10 +34,10 @@ const Login = () => {
 
           <form className="max-w-sm mx-auto">
             <div className="mb-5">
-              <input type="email" id="email" className="bg-white p-4 border border-gray-300 w-full rounded-md outline-none" placeholder="Email" required />
+            <Input placeholder="Email" className='bg-white p-4 border border-gray-300 w-full rounded-md outline-none' />
             </div>
             <div className="mb-5">
-              <input type="password" id="password" className="bg-white p-4 border border-gray-300 w-full rounded-md outline-none" placeholder="Password" required />
+            <Input.Password placeholder="Password" className='bg-white p-4 border border-gray-300 w-full rounded-md outline-none'/>
             </div>
             <div className="flex w-full justify-between mb-5">
               <div className="flex items-center">
