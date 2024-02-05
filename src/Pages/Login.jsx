@@ -12,7 +12,7 @@ const Login = () => {
     <section className="bg-[#F0F2F5]">
       <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet"></link>
       <div className="lg:grid lg:grid-cols-2 md:grid md:grid-cols-2 min-h-screen" style={{ gridTemplateColumns: '60% 40%' }}>
-        <div className="bg-[#eee] px-12 py-8">
+        <div className="px-12 py-8">
           <nav className="lg:flex md:flex sm:flex w-full md:justify-between sm:justify-between lg:justify-between">
             <div className="flex items-center"><img src={logo} className="w-8 h-8"/><h1 className="font-semibold text-xl ml-2">EmoSense</h1></div>
             <div className="lg:inline md:inline sm:inline xl:inline hidden"><h1>Don't have account? <Link to="/signup" className="text-[#20DC49]">Sign up!</Link></h1></div>
