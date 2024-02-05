@@ -48,7 +48,7 @@ const Signup = () => {
               <br></br>
               <div className='flex items-center justify-center'>
                 <hr className='w-[170px] bg-gray-300 h-[1px] border-none'></hr><h1 className='px-2 text-center text-black'>Or Continue With</h1><hr className='w-[170px] bg-gray-300 h-[1px] border-none'></hr>
-              </div><br></br>
+              </div>
             </div>
           </section>
           <form className="max-w-sm mx-auto px-12 lg:px-0">
