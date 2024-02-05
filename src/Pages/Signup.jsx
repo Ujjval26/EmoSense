@@ -6,14 +6,14 @@ import { BsFacebook } from "react-icons/bs";
 import signup from "../assets/images/signup.png"
 import { BsLightningChargeFill } from "react-icons/bs";
 import signup1 from "../assets/images/signup_1.png"
-import {  Input } from 'antd';
+import { Input } from 'antd';
 const Signup = () => {
 
   return (
     <section className="bg-[#F0F2F5]">
       <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet"></link>
 
-      <div className="lg:grid lg:grid-cols-2 md:grid md:grid-cols-1 min-h-screen" style={{ gridTemplateColumns: '40% 60%' }}>
+      <div className="lg:grid lg:grid-cols-2 min-h-screen" style={{ gridTemplateColumns: '40% 60%' }}>
         <div className='relative max-h-screen min-h-screen overflow-hidden lg:sticky top-0 lg:inline md:hidden sm:hidden xl:inline hidden'>
           <img src={signup} alt="signup" className="w-full min-h-screen max-h-screen object-cover" />
           <div className="flex items-center justify-left pl-12 w-full rounded-lg">
@@ -35,7 +35,7 @@ const Signup = () => {
           <section className='px-12 py-8'>
             <nav className='w-full flex justify-between'>
               <div className="flex items-center"><img src={logo} className="w-8 h-8" /><h1 className="font-semibold text-xl ml-2">EmoSense</h1></div>
-              <div className="lg:inline md:inline sm:inline xl:inline hidden"><h1>Already Have an Account? <Link to="/login" className="text-[#20DC49]">Login</Link></h1></div>
+              <div className="lg:inline md:inline sm:inline xl:inline hidden"><h1>Already Have an Account? <Link to="/login" className="text-[#20DC49]">Login!</Link></h1></div>
             </nav>
             <div className='mt-[50px]'>
               <h1 className='font-semibold text-xl text-center'>Get Started with MAKER</h1>
@@ -53,21 +53,17 @@ const Signup = () => {
           </section>
           <form className="max-w-sm mx-auto px-12 lg:px-0">
             <div className="mb-5">
-            <Input placeholder="Name" className='bg-white p-4 border border-gray-300 w-full rounded-md outline-none' />
-                        </div>
-            <div className="mb-5">
-            <Input placeholder="Email" className='bg-white p-4 border border-gray-300 w-full rounded-md outline-none' />
+              <Input placeholder="Name" className='bg-white p-4 border border-gray-300 w-full rounded-md outline-none' />
             </div>
             <div className="mb-5">
-            <Input.Password placeholder="Password" className='bg-white p-4 border border-gray-300 w-full rounded-md outline-none'/>
+              <Input placeholder="Email" className='bg-white p-4 border border-gray-300 w-full rounded-md outline-none' />
             </div>
             <div className="mb-5">
-              <Input.Password placeholder="Retype Password" className='bg-white p-4 border border-gray-300 w-full rounded-md outline-none'/>
-              {/* <Input.Password
-                placeholder="input password"
-                iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
-              />   */}
-                        </div>
+              <Input.Password placeholder="Password" className='bg-white p-4 border border-gray-300 w-full rounded-md outline-none' />
+            </div>
+            <div className="mb-5">
+              <Input.Password placeholder="Retype Password" className='bg-white p-4 border border-gray-300 w-full rounded-md outline-none' />
+            </div>
 
             <button type="submit" className="border border-[#20DC49] items-center text-white bg-[#20DC49] rounded-md w-full px-8 py-2">Create Account</button>
           </form><br></br>

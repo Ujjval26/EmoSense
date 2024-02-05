@@ -13,7 +13,7 @@ const Login = () => {
   return (
     <section className="bg-[#F0F2F5]">
       <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet"></link>
-      <div className="lg:grid lg:grid-cols-2 md:grid md:grid-cols-2 min-h-screen" style={{ gridTemplateColumns: '60% 40%' }}>
+      <div className="lg:grid lg:grid-cols-2 min-h-screen" style={{ gridTemplateColumns: '60% 40%' }}>
         <div className="px-12 py-8">
           <nav className="lg:flex md:flex sm:flex w-full md:justify-between sm:justify-between lg:justify-between">
             <div className="flex items-center"><img src={logo} className="w-8 h-8"/><h1 className="font-semibold text-xl ml-2">EmoSense</h1></div>
@@ -46,13 +46,13 @@ const Login = () => {
                 <Link to="/" className="text-[tomato]">Recover Password</Link></div>
 
             </div>
-            <button type="submit" className="border border-gray-300 text-gray-800 rounded-md w-full px-8 py-2">Login</button>
+            <button type="submit" className="border border-[#20DC49] bg-[#20DC49] text-white rounded-md w-full px-8 py-2">Login</button>
           </form>
           <div className="lg:hidden sm:hidden md:hidden mt-4 xl:hidden "><h1>Don't have account? <Link to="/signup" className="text-[#20DC49]">Sign up!</Link></h1></div>
 
         </div>
-        <div className="relative">
-          <img src={login} alt="login" className="w-full min-h-screen max-h-screen object-cover" />
+        <div className="relative lg:inline md:hidden sm:hidden xl:inline hidden">
+          <img src={login} alt="login" className="w-full min-h-screen max-h-screen object-cover " />
           <div className="flex items-center justify-center w-full rounded-lg">
             <div className="absolute bottom-12 p-4 grid items-center justify-center w-[80%] bg-white bg-opacity-10  backdrop-filter backdrop-blur-lg rounded-lg">
               <div className="bg-green-500 p-4 text-white rounded-lg">
