@@ -13,11 +13,11 @@ const Login = () => {
       <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet"></link>
       <div className="lg:grid lg:grid-cols-2 md:grid md:grid-cols-2 min-h-screen" style={{ gridTemplateColumns: '60% 40%' }}>
         <div className="bg-[#eee] px-12 py-8">
-          <nav className="flex w-full justify-between">
+          <nav className="lg:flex md:flex sm:flex w-full md:justify-between sm:justify-between lg:justify-between">
             <div className="flex items-center"><img src={logo} className="w-8 h-8"/><h1 className="font-semibold text-xl ml-2">EmoSense</h1></div>
-            <h1>Don't have account? <Link to="/signup" className="text-[#20DC49]">Sign up!</Link></h1>
+            <div className="lg:inline md:inline sm:inline xl:inline hidden"><h1>Don't have account? <Link to="/signup" className="text-[#20DC49]">Sign up!</Link></h1></div>
           </nav>
-          <section className="lg:mt-[50px]">
+          <section className="mt-[50px]">
             <h1 className="font-bold text-3xl text-center">Welcome Back</h1>
             <h3 className="mt-3 text-center">Login into your account</h3><br></br>
             <div className="flex text-center items-center justify-center">
@@ -46,6 +46,7 @@ const Login = () => {
             </div>
             <button type="submit" className="border border-gray-300 text-gray-800 rounded-md w-full px-8 py-2">Login</button>
           </form>
+          <div className="lg:hidden sm:hidden md:hidden mt-4 xl:hidden "><h1>Don't have account? <Link to="/signup" className="text-[#20DC49]">Sign up!</Link></h1></div>
 
         </div>
         <div className="relative">
