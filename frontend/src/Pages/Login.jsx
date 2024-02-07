@@ -5,7 +5,7 @@ import login from "../assets/images/login.png"
 import { Link } from "react-router-dom";
 import logo from "../assets/images/logo.png";
 import {  Input } from 'antd';
-import { useState } from "react";
+import { useState,useEffect } from "react";
 const Login = () => {
   const onChange = (checked) => {
     console.log(`switch to ${checked}`);
@@ -50,7 +50,14 @@ const Login = () => {
     } catch (err) {
         console.error(err);
     }
-};
+  
+  };
+  useEffect(()=>{
+    const token = localStorage.getItem("token");
+    if(token){
+      window.location.replace('/dashboard');
+    }
+  })
   return (
     <section className="bg-[#F0F2F5]">
       <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet"></link>
