@@ -42,6 +42,7 @@ const Login = () => {
         localStorage.removeItem("token");
         if (data.status === 'success') {
             localStorage.setItem("token", data.jwt);
+            localStorage.setItem("id", data.id);
             window.location.replace('/dashboard');
 
         } else {

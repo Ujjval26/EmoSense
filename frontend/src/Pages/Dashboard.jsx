@@ -10,7 +10,7 @@ const Dashboard = () => {
   const [capturedImage, setCapturedImage] = useState(null);
   const [isCameraOn, setIsCameraOn] = useState(true);
   const [stream, setStream] = useState(null);
-
+  const [data,setData] = useState();
   const startVideoStream = () => {
     navigator.mediaDevices.getUserMedia({ video: true })
       .then(stream => {
@@ -65,8 +65,31 @@ const Dashboard = () => {
     }
 };
 
+const fetchData = async () => {
+  try {
+      const id = localStorage.getItem("id");
+      const response = await fetch(`http://localhost:8000/api/profile/${id}`, {
+          method: 'GET',
+          headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json',
+          }
+      });
+      const data = await response.json();
+      console.log(data);
+      setData(data);
+  } catch (err) {
+      console.error(err);
+  }
+};
+
 
   useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      window.location.replace('/login');
+    }
+    fetchData();
     startVideoStream();
     return () => {
       stopVideoStream(); // Cleanup function to stop camera when component unmounts
@@ -76,9 +99,10 @@ const Dashboard = () => {
   return (
     <div className='bg-[#000010] w-full text-white flex min-h-screen'>
       <Sidebar />
-      <div className='w-full'>
+      <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet"></link>
+      <div className='w-full ml-16'>
         <nav className='w-full flex items-center justify-between'>
-          <h1 className='p-4 px-8 text-lg'>Ujjval Patel</h1>
+          <h1 className='p-4 px-8 text-lg'>{data?.username}</h1>
         </nav>
         <div className="md:flex md:flex-row">
           <div className='w-[55%] px-4'>

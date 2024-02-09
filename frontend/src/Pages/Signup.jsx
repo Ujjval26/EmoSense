@@ -12,6 +12,9 @@ const Signup = () => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
+    phone:'',
+    age:'',
+    gender:'',
     password: '',
     rePassword: ''
   });
@@ -23,7 +26,7 @@ const Signup = () => {
   };
   const handleForm = async (e) => {
     e.preventDefault();
-    if((formData.name === '' || formData.email === '' || formData.password === '')) {
+    if((formData.name === '' || formData.email === '' || formData.password === '' || formData.rePassword === '' || formData.phone === '' || formData.age === '' || formData.gender === '')) {
         alert('All fields are required');
         return;
     }
@@ -38,6 +41,9 @@ const Signup = () => {
     formDataToSend.append('username', formData.name);
     formDataToSend.append('email', formData.email);
     formDataToSend.append('password', formData.password);   
+    formDataToSend.append('age', formData.age);   
+    formDataToSend.append('gender', formData.gender);   
+    formDataToSend.append('phone', formData.phone);   
     try {
         const response = await fetch('http://localhost:8000/api/signup/', {
             method: 'POST',
@@ -113,6 +119,27 @@ const Signup = () => {
                 onChange={handleInputChange}
                 id='email'
                 placeholder="Email" className='email bg-white p-4 border border-gray-300 w-full rounded-md outline-none' />
+            </div>
+            <div className="mb-5">
+              <Input
+                value={formData.phone}
+                onChange={handleInputChange}
+                id='phone'
+                placeholder="Phone" className='phone bg-white p-4 border border-gray-300 w-full rounded-md outline-none' />
+            </div>
+            <div className="mb-5">
+              <Input
+                value={formData.age}
+                onChange={handleInputChange}
+                id='age'
+                placeholder="Age" className='age bg-white p-4 border border-gray-300 w-full rounded-md outline-none' />
+            </div>
+            <div className="mb-5">
+              <Input
+                value={formData.gender}
+                onChange={handleInputChange}
+                id='gender'
+                placeholder="Gender" className='gender bg-white p-4 border border-gray-300 w-full rounded-md outline-none' />
             </div>
             <div className="mb-5">
               <Input.Password 

@@ -77,20 +77,21 @@ def photo_upload(request):
         if image_data is None:
             return JsonResponse({'error': 'Image data not found in the request.'}, status=400)
 
-        # Split the data URL to extract the base64-encoded image data
         format, imgstr = image_data.split(';base64,')
         ext = format.split('/')[-1]
 
-        # Decode the base64 data
         image_data_decoded = base64.b64decode(imgstr)
-
-        # Create a ContentFile object from the decoded data
         image_file = ContentFile(image_data_decoded, name='temp.' + ext)
-
-        # Save the image to the database
         image = Images(image_data=image_file)
         image.save()
 
         return JsonResponse({'message': 'Image saved successfully.'})
     else:
         return JsonResponse({'error': 'Only POST requests are allowed.'}, status=400)
+
+
+@api_view(['GET'])
+def profile(request, pk):
+    user = Users.objects.get(id=pk)
+    serializer = UserSerializer(user)
+    return Response(serializer.data)
