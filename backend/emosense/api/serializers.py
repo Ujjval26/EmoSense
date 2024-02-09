@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from emotion.models import Users
+from emotion.models import Users,Images
 from django.contrib.auth.hashers import make_password
 
 class UserSerializer(serializers.ModelSerializer):
@@ -15,3 +15,7 @@ class UserSerializer(serializers.ModelSerializer):
         instance.save()
         return instance
 
+class ImagesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Images
+        fields = '__all__'

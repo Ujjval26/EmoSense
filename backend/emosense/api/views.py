@@ -1,10 +1,15 @@
 from rest_framework.response import Response    
 from rest_framework.decorators import api_view
-from emotion.models import Users
-from .serializers import UserSerializer
+from emotion.models import Users,Images
+from .serializers import UserSerializer,ImagesSerializer
 from rest_framework import status
 from django.contrib.auth.hashers import check_password
 import jwt,datetime
+from django.http import JsonResponse
+import base64
+from django.core.files.base import ContentFile
+from django.views.decorators.csrf import csrf_exempt
+
 
 # Load pre-trained InceptionResnetV1 model
 
@@ -63,4 +68,29 @@ def signup(request):
         else:
             return Response({'status': 'error', 'message': 'Failed to add data'}, status=status.HTTP_400_BAD_REQUEST)
 
+@api_view(['POST'])
+@csrf_exempt
+def photo_upload(request):
+    if request.method == 'POST':
+        image_data = request.data.get('image_data')
 
+        if image_data is None:
+            return JsonResponse({'error': 'Image data not found in the request.'}, status=400)
+
+        # Split the data URL to extract the base64-encoded image data
+        format, imgstr = image_data.split(';base64,')
+        ext = format.split('/')[-1]
+
+        # Decode the base64 data
+        image_data_decoded = base64.b64decode(imgstr)
+
+        # Create a ContentFile object from the decoded data
+        image_file = ContentFile(image_data_decoded, name='temp.' + ext)
+
+        # Save the image to the database
+        image = Images(image_data=image_file)
+        image.save()
+
+        return JsonResponse({'message': 'Image saved successfully.'})
+    else:
+        return JsonResponse({'error': 'Only POST requests are allowed.'}, status=400)

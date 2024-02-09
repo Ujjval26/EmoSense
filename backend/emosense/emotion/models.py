@@ -6,12 +6,11 @@ class Emotions(models.Model):
     emotion_name = models.CharField(max_length=50)
 
 
-# class Images(models.Model):
-#     user_id = models.IntegerField(max_length=100 ) 
-#     image_data = models.BlobField(max_length=15 )     
-#     captured_at = models.TimeField(auto_now_add=True) 
-#     emotion_detected = models.CharField(max_length=50 )
-#     confidence_score = models.FloatField(max_length=20 )
+class Images(models.Model):
+    image_data = models.ImageField(upload_to='images/')     
+    captured_at = models.TimeField(auto_now_add=True) 
+    # emotion_detected = models.CharField(max_length=50 )
+    # confidence_score = models.FloatField(max_length=20 )
 
 
 

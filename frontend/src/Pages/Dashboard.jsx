@@ -38,17 +38,33 @@ const Dashboard = () => {
       // setStream(null);
     }
   };
-
-  const takePhoto = () => {
+  const takePhoto = async () => {
+    // Capture the image data
     if (videoRef.current) {
-      const video = videoRef.current;
-      const canvas = canvasRef.current;
-      const context = canvas.getContext('2d');
-      context.drawImage(video, 0, 0, canvas.width, canvas.height);
-      const dataURL = canvas.toDataURL('image/png');
-      setCapturedImage(dataURL);
+        const video = videoRef.current;
+        const canvas = canvasRef.current;
+        const context = canvas.getContext('2d');
+        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+        const dataURL = canvas.toDataURL('image/png');
+
+        // Send the image data to the backend
+        try {
+            const response = await fetch('http://localhost:8000/api/photo/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json' // Specify JSON content type
+                },
+                body: JSON.stringify({ image_data: dataURL }) // Send image_data as JSON
+            });
+
+            const responseData = await response.json();
+            console.log(responseData);
+        } catch (err) {
+            console.error('Error sending photo:', err);
+        }
     }
-  };
+};
+
 
   useEffect(() => {
     startVideoStream();
