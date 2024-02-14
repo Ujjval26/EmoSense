@@ -1,4 +1,4 @@
 # Ignore virtual environment
-/backend/venv/
+venv/
 
 # Ignore other files and folders as needed
