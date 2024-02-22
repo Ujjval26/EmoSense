@@ -19,10 +19,10 @@ const EmotionDetectionHistory = () => {
   return (
     <div>
       <div>
-        <h1 className='text-xl font-semibold'>Emotion Detection History</h1>        
+        <h1 className='text-xl mt-8 font-semibold'>Emotion Detection History</h1>        
       </div>
       <div>
-        {emotionData.map((item, index) => (
+        {emotionData?.length>0?emotionData.map((item, index) => (
           <div key={index} className='flex w-full justify-between items-center mt-6'>
             <div className='flex items-center'>
               <div><img src={item.image} className='w-12 object-cover h-12 rounded-full' alt={`Emotion ${item.emotion}`} /></div>
@@ -32,7 +32,7 @@ const EmotionDetectionHistory = () => {
               <p className='text-sm text-[#6B6B6B]'>{item.date}</p>
             </div>
           </div>
-        ))}
+        )):<div className='text-center text-[#6b6b6b] mt-8'>No Data Available</div>}
       </div>
     </div>
   );
