@@ -95,3 +95,20 @@ def profile(request, pk):
     user = Users.objects.get(id=pk)
     serializer = UserSerializer(user)
     return Response(serializer.data)
+
+@api_view(['PUT'])
+def edit_profile(request, pk):
+    user = Users.objects.get(id=pk)
+    email = request.data.get('email')
+    phone = request.data.get('phone')
+    email_user = Users.objects.filter(email=email).exclude(id=pk)
+    phone_user = Users.objects.filter(phone=phone).exclude(id=pk)
+    if email_user.exists():
+        return Response({'status': 'error', 'message': 'Email already exists'}, status=status.HTTP_400_BAD_REQUEST)
+    if phone_user.exists():
+        return Response({'status': 'error', 'message': 'Phone already exists'}, status=status.HTTP_400_BAD_REQUEST)
+    serializer = UserSerializer(instance=user, data=request.data,partial=True)
+    if serializer.is_valid():
+        serializer.save()
+        return JsonResponse({'message': 'Profile Updated Successfully','status':'success'}, status=200)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

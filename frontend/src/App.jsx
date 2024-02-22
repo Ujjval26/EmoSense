@@ -5,6 +5,7 @@ import Signup from './Pages/Signup'
 import Dashboard from './Pages/Dashboard'
 import Report from './Pages/Report'
 import Profile from './Pages/Profile'
+import EditProfile from './Pages/EditProfile'
 function App() {
 
   return (
@@ -17,6 +18,7 @@ function App() {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/report" element={<Report />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/edit-profile" element={<EditProfile />} />
         </Routes>
       </Router>
     </>

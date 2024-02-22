@@ -1,5 +1,7 @@
 import React from 'react';
-import { useState ,useEffect} from 'react';
+import { useState, useEffect } from 'react';
+import EmotionDetectionHistory from '../Components/EmotionDetectionHistory';
+import { Link } from 'react-router-dom';
 import Sidebar from '../Components/Sidebar';
 const Profile = () => {
     const [data, setData] = useState();
@@ -19,29 +21,65 @@ const Profile = () => {
         } catch (err) {
             console.error(err);
         }
-      };
+    };
 
-      useEffect(() => { 
+    useEffect(() => {
         const token = localStorage.getItem("token");
         if (!token) {
             window.location.replace('/login');
         }
         fetchData();
-      }
+    }
         , []);
 
     return (
 
-        <div className="profile-section flex min-h-screen">
+        <div className="profile-section flex min-h-screen bg-[#1a1a1a] text-white">
             <Sidebar />
-        <div className="profile-details ml-32 pt-12">
-          <h2>Name: {data?.username}</h2>
-          <p>Email: {data?.email}</p>
-          <p>Mobile: {data?.phone}</p>
-          <p>Age: {data?.age}</p>
-          <p>Gender: {data?.gender}</p>
+            <div className='ml-24 p-12'>
+                <div>
+                    <h1 className='text-3xl font-bold'>Profile</h1>
+                </div>
+                <div className='mt-8 grid grid-cols-3 gap-4 justify-between'>
+                    <div className='mt-4'>
+                        <label className='text-md font-medium'>Name</label>
+                        <p className='bg-[#2f2f2f] w-[27vw] p-4 mt-2 text-white rounded-xl outline-none' >
+                            {data?.username}
+                        </p>
+                    </div>
+                    <div className='mt-4'>
+                        <label className='text-md font-medium'>Email</label>
+                        <p className='bg-[#2f2f2f] w-[27vw] p-4 mt-2 text-white rounded-xl outline-none' >
+                            {data?.email}
+                        </p>
+                    </div>
+                    <div className='mt-4'>
+                        <label className='text-md font-medium'>Phone</label>
+                        <p className='bg-[#2f2f2f] w-[27vw] p-4 mt-2 text-white rounded-xl outline-none' >
+                            {data?.phone}
+                        </p>
+                    </div>
+                    <div className='mt-4'>
+                        <label className='text-md font-medium'>Age</label>
+                        <p className='bg-[#2f2f2f] w-[27vw] p-4 mt-2 text-white rounded-xl outline-none' >
+                            {data?.age}
+                        </p>
+                    </div>
+                    <div className='mt-4'>
+                        <label className='text-md font-medium'>Gender</label>
+                        <p className='bg-[#2f2f2f] w-[27vw] p-4 mt-2 text-white rounded-xl outline-none' >
+                            {data?.gender}
+                        </p>
+                    </div>
+
+                </div>
+                <Link to="/edit-profile"><button type='button' className='my-8 py-2 px-4 bg-white text-black rounded-md inline-block'>
+                    Edit Profile
+                </button>
+                </Link>
+            <EmotionDetectionHistory />
+            </div>
         </div>
-      </div>
     );
 }
 
