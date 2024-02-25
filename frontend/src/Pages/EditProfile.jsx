@@ -3,7 +3,11 @@ import { useState, useEffect } from 'react';
 import Sidebar from '../Components/Sidebar';
 import { Link } from 'react-router-dom';
 import {toast,Toaster } from 'react-hot-toast';
+import Loader from '../Components/Loader';
+
 const EditProfile = () => {
+    const [loading, setLoading] = useState(true);
+
     const [formData, setFormData] = useState({
         username: '',
         email: '',
@@ -45,6 +49,8 @@ const EditProfile = () => {
                 gender:data.gender
 
             })
+            setLoading(false);
+
         } catch (err) {
             console.error(err);
         }
@@ -131,7 +137,7 @@ const handleUpdate = async () => {
         <div className="profile-section flex min-h-screen bg-[#1a1a1a] text-white">
             <Sidebar />
             <Toaster />
-            <div className='ml-24 p-12'>
+            {loading?<Loader />:<div className='ml-24 p-12'>
                 <div>
                     <h1 className='text-3xl font-bold'>Edit Profile</h1>
                 </div>
@@ -166,7 +172,7 @@ const handleUpdate = async () => {
                 >
                     Save Changes
                 </button>
-            </div>
+            </div>}
         </div>
     );
 }

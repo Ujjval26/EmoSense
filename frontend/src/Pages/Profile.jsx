@@ -3,8 +3,10 @@ import { useState, useEffect } from 'react';
 import EmotionDetectionHistory from '../Components/EmotionDetectionHistory';
 import { Link } from 'react-router-dom';
 import Sidebar from '../Components/Sidebar';
+import Loader from '../Components/Loader';
 const Profile = () => {
     const [data, setData] = useState();
+    const [loading, setLoading] = useState(true);
     const fetchData = async () => {
         try {
             const id = localStorage.getItem("id");
@@ -18,8 +20,9 @@ const Profile = () => {
             const data = await response.json();
             console.log(data);
             setData(data);
+            setLoading(false);
         } catch (err) {
-            console.error(err);
+            console.error(err);            
         }
     };
 
@@ -36,7 +39,7 @@ const Profile = () => {
 
         <div className="profile-section flex min-h-screen bg-[#1a1a1a] text-white">
             <Sidebar />
-            <div className='ml-24 p-12'>
+            {loading?<Loader />:<div className='ml-24 p-12'>
                 <div>
                     <h1 className='text-3xl font-bold'>Profile</h1>
                 </div>
@@ -78,7 +81,7 @@ const Profile = () => {
                 </button>
                 </Link>
             <EmotionDetectionHistory />
-            </div>
+            </div>}
         </div>
     );
 }
