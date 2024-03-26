@@ -19,6 +19,7 @@ const Dashboard = () => {
     const [stream, setStream] = useState(null);
     const [data, setData] = useState();
     const [logData, setLogData] = useState([]);
+    const [outputData, setOutputData] = useState(null);
 
     const startVideoStream = () => {
         navigator.mediaDevices.getUserMedia({ video: true })
@@ -57,16 +58,17 @@ const Dashboard = () => {
             const dataURL = canvas.toDataURL('image/png');
 
             try {
-                const response = await fetch('http://localhost:8000/api/photo/', {
+                const response = await fetch('http://localhost:8000/api/model/', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ image_data: dataURL })
+                    body: JSON.stringify({ image: dataURL })
                 });
 
                 const responseData = await response.json();
                 console.log(responseData);
+                setOutputData(responseData); // Store the response data in state
             } catch (err) {
                 console.error('Error sending photo:', err);
             }
@@ -98,8 +100,12 @@ const Dashboard = () => {
         }
         fetchData();
         startVideoStream();
+
+        const intervalId = setInterval(takePhoto, 5000); 
+        
         return () => {
             stopVideoStream();
+            clearInterval(intervalId);
         };
     }, []);
 
@@ -119,17 +125,26 @@ const Dashboard = () => {
                             <button className={`absolute bottom-8 left-1/2 transform -translate-x-1/2 p-4 text-white border border-white ${isCameraOn ? "" : "bg-red-500"} rounded-full mb-2`} onClick={toggleCamera}>
                                 {isCameraOn ? <FiCamera /> : <FiCameraOff />}
                             </button>
-                            <button className="mt-2 absolute left-1/2 transform -translate-x-1/2 px-12 py-2 bg-blue-500 text-white rounded-md mb-2" onClick={takePhoto}>Take Photo</button>
                         </div>
                     </div>
                     <div className='w-[45%] p-4'>
                         <div className='backdrop-blur-xl bg-white bg-opacity-10 rounded-xl'>
                             <h1 className='text-center p-4 uppercase text-xl'>Output</h1>
                             <div className='text-sm pl-6 pb-12'>
-                                {logData.map((log, index) => (
+                                {logData?.map((log, index) => (
                                     <ResultItem key={index} timestamp={log.timestamp} message={log.message} />
                                 ))}
                             </div>
+                            {outputData && (
+                                <div className='pl-6 pb-12'>
+                                    <h2>Emotions Detected:</h2>
+                                    <ul>
+                                        {outputData?.emotions?.map((emotion, index) => (
+                                            <li key={index}>{emotion}</li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>
