@@ -7,9 +7,12 @@ import Report from './Pages/Report'
 import Profile from './Pages/Profile'
 import EditProfile from './Pages/EditProfile'
 import Home from './Pages/Home'
+
+
 function App() {
 
   return (
+    
     <>
       <Router>
         <Routes>
@@ -23,6 +26,7 @@ function App() {
         </Routes>
       </Router>
     </>
+    
   )
 }
 

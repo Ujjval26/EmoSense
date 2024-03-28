@@ -4,8 +4,11 @@ import { Switch } from 'antd';
 import login from "../assets/images/login.png"
 import { Link } from "react-router-dom";
 import logo from "../assets/images/logo.png";
-import {  Input } from 'antd';
-import { useState,useEffect } from "react";
+import { Input } from 'antd';
+import { useState, useEffect } from "react";
+import React from 'react';
+import { GoogleLogin } from 'react-google-login';
+
 const Login = () => {
   const onChange = (checked) => {
     console.log(`switch to ${checked}`);
@@ -24,44 +27,48 @@ const Login = () => {
   const handleForm = async (e) => {
     e.preventDefault();
     if (formData.email === '' || formData.password === '') {
-    alert("All fields are required");
-        return;
+      alert("All fields are required");
+      return;
     }
     try {
-        const response = await fetch('http://localhost:8000/api/login/', {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(formData)
-        });
+      const response = await fetch('http://localhost:8000/api/login/', {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
+      });
 
-        const data = await response.json();
-        console.log(data);
-        localStorage.removeItem("token");
-        if (data.status === 'success') {
-            localStorage.setItem("token", data.jwt);
-            localStorage.setItem("id", data.id);
-            window.location.replace('/dashboard');
+      const data = await response.json();
+      console.log(data);
+      localStorage.removeItem("token");
+      if (data.status === 'success') {
+        localStorage.setItem("token", data.jwt);
+        localStorage.setItem("id", data.id);
+        window.location.replace('/dashboard');
 
-        } else {
-            alert(data.message);
-        }
+      } else {
+        alert(data.message);
+      }
     } catch (err) {
-        console.error(err);
+      console.error(err);
     }
-  
+
   };
-  useEffect(()=>{
+  useEffect(() => {
     const token = localStorage.getItem("token");
-    if(token){
+    if (token) {
       window.location.replace('/dashboard');
     }
-  })
+  }, []);
+  
+  const responseGoogle = (response) => {
+    console.log(response)
+  };
+
   return (
     <section className="bg-[#F0F2F5]">
-      <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet"></link>
       <div className="lg:grid lg:grid-cols-2 min-h-screen" style={{ gridTemplateColumns: '60% 40%' }}>
         <div className="px-12 py-8">
           <nav className="lg:flex md:flex sm:flex w-full md:justify-between sm:justify-between lg:justify-between">
@@ -72,8 +79,21 @@ const Login = () => {
             <h1 className="font-bold text-3xl text-center">Welcome Back</h1>
             <h3 className="mt-3 text-center">Login into your account</h3><br></br>
             <div className="flex text-center items-center justify-center">
-              <div className="flex text-center items-center justify-center border border-gray-300 bg-[white] px-8 py-2 rounded-md hover:cursor-pointer"><FcGoogle className="text-3xl" /> &nbsp;Google </div>
-              <div className="flex text-center items-center justify-center border border-gray-300 bg-[white] ml-4 px-8 py-2 rounded-md hover:cursor-pointer"><BsFacebook className="text-3xl text-[#3B5998]" /> &nbsp;Facebook </div>
+              <GoogleLogin
+                clientId="1005163847995-ngh95j969boe2aivj4suvnkq0rc2ep8t.apps.googleusercontent.com"
+                buttonText="Login with Google"
+                onSuccess={responseGoogle}
+                onFailure={responseGoogle}
+                cookiePolicy={'single_host_origin'}
+                className="flex text-center items-center justify-center border border-gray-300 bg-[white] px-8 py-2 rounded-md hover:cursor-pointer"
+                render={renderProps => (
+                  <FcGoogle onClick={renderProps.onClick} disabled={renderProps.disabled} className="text-3xl" />
+                )}
+              />
+
+              {/* <div className="flex text-center items-center justify-center  ml-4 px-8 py-2 rounded-md hover:cursor-pointer">
+                <BsFacebook className="text-3xl text-[#3B5998]" />
+              </div> */}
             </div><br></br>
             <div className='flex items-center justify-center'>
               <hr className='w-[170px] bg-gray-300 h-[1px] border-none'></hr><h1 className='px-2 text-center text-black'>Or Continue With</h1><hr className='w-[170px] bg-gray-300 h-[1px] border-none'></hr>

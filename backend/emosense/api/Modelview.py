@@ -9,8 +9,8 @@ import base64
 from django.core.files.base import ContentFile
 
 # Load the pre-trained model and cascade classifier
-classifier = load_model('C:/Users/shahp/Desktop/Ujjval/emosense/backend/emosense/api/model.h5')
-face_classifier = cv2.CascadeClassifier('C:/Users/shahp/Desktop/Ujjval/emosense/backend/emosense/api/haarcascade_frontalface_default.xml')
+classifier = load_model('/Users/sarjan/Documents/GitHub/emosense/backend/emosense/api/model.h5')
+face_classifier = cv2.CascadeClassifier('/Users/sarjan/Documents/GitHub/emosense/backend/emosense/api/haarcascade_frontalface_default.xml')
 emotion_labels = ['Angry', 'Disgust', 'Fear', 'Happy', 'Neutral', 'Sad', 'Surprise']
 
 @api_view(['POST'])
@@ -27,8 +27,8 @@ def predict_emotion(request):
 
         # Process the image data
         # Load the pre-trained model and cascade classifier
-        classifier = load_model('C:/Users/shahp/Desktop/Ujjval/emosense/backend/emosense/api/model.h5')
-        face_classifier = cv2.CascadeClassifier('C:/Users/shahp/Desktop/Ujjval/emosense/backend/emosense/api/haarcascade_frontalface_default.xml')
+        classifier = load_model('/Users/sarjan/Documents/GitHub/emosense/backend/emosense/api/model.h5')
+        face_classifier = cv2.CascadeClassifier('/Users/sarjan/Documents/GitHub/emosense/backend/emosense/api/haarcascade_frontalface_default.xml')
         emotion_labels = ['Angry', 'Disgust', 'Fear', 'Happy', 'Neutral', 'Sad', 'Surprise']
 
         # Convert image data to OpenCV format

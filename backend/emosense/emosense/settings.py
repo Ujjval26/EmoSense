@@ -107,7 +107,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME':'emosense',
         'USER':'root',
-        'PASSWORD':'root',
+        # 'PASSWORD':'root',
         'HOST':'localhost',
         'PORT':'3306',
     }
@@ -129,6 +129,7 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
 
 
 # Internationalization
