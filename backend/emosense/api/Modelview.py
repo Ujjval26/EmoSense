@@ -2,6 +2,7 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import api_view
 from keras.models import load_model
+from .serializers import EmotionHistorySerializer
 from keras.preprocessing.image import img_to_array
 import numpy as np
 import cv2
@@ -19,7 +20,7 @@ def predict_emotion(request):
     if request.method == 'POST' and request.data.get('image'):
         # Get the base64 encoded image data from the request
         image_data = request.data['image']
-
+        user_id = request.data['user_id']
         # Decode the base64 image data
         format, imgstr = image_data.split(';base64,')
         ext = format.split('/')[-1]
@@ -54,6 +55,19 @@ def predict_emotion(request):
                 prediction = classifier.predict(roi)[0]
                 label = emotion_labels[prediction.argmax()]
                 emotions.append(label)
+                
+                data = {
+                    'image': request.data['image'],
+                    'emotion': label,
+                    'userId': user_id
+                }
+                print(data)
+                serializer = EmotionHistorySerializer(data=data)
+                if serializer.is_valid():
+                    serializer.save()
+                else:
+                    print(serializer.errors)  
+                    return JsonResponse({'error': 'Failed to save emotion data.'}, status=400)
 
             return JsonResponse({'emotions': emotions})
         else:

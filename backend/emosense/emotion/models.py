@@ -12,6 +12,12 @@ class Images(models.Model):
     # confidence_score = models.FloatField(max_length=20 )
 
 
+class EmotionHistory(models.Model):
+    image = models.TextField()
+    emotion = models.CharField(max_length=50)
+    userId = models.CharField(max_length=50)
+    detected_at = models.DateTimeField(auto_now_add=True)  
+
 
 class Users(models.Model):
     username = models.CharField(max_length=50)

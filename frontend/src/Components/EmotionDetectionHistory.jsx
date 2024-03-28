@@ -2,18 +2,23 @@ import React, { useState, useEffect } from 'react';
 import vk from "../assets/images/vk.jpg";
 import ro from "../assets/images/ro.jpeg";
 import ms from "../assets/images/msd.jpeg";
-
+import axios from 'axios';
 const EmotionDetectionHistory = () => {
   const [emotionData, setEmotionData] = useState([]);
 
-  const simulatedEmotionData = [
-    { image: vk, emotion: 'Calm', date: 'Feb 21, 2024' },
-    { image: ro, emotion: 'Neutral', date: 'Feb 18, 2024' },
-    { image: ms, emotion: 'Excited', date: 'Feb 13, 2024' }
-  ];
-
+  const fetchData = async () => {
+    try {
+      const id = localStorage.getItem("id");
+      const response = await axios.get(`http://localhost:8000/api/emotionHistory/${id}`);
+      const data = await response
+      console.log(data);
+      setEmotionData(data?.data);
+    } catch (err) {
+      console.error(err);
+    }
+  }
   useEffect(() => { 
-    setEmotionData(simulatedEmotionData);
+    fetchData();
   }, []);
 
   return (
@@ -29,7 +34,7 @@ const EmotionDetectionHistory = () => {
               <div className='pl-4 text-md'><h1>{item.emotion}<br></br><p className='text-sm hover:cursor-pointer text-[#6b6b6b] hover:text-[#4a4a4a]'>View Deailed Analysis</p></h1></div>
             </div>
             <div>
-              <p className='text-sm text-[#6B6B6B]'>{item.date}</p>
+              <p className='text-sm text-[#6B6B6B]'>{item.detected_at}</p>
             </div>
           </div>
         )):<div className='text-center text-[#6b6b6b] mt-8'>No Data Available</div>}

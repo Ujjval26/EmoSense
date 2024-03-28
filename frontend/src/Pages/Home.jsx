@@ -1,12 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import Sidebar from '../Components/Sidebar';
 import { CiCamera } from "react-icons/ci";
 import { Link } from 'react-router-dom';
 import { toast, Toaster } from 'react-hot-toast';
-import vk from "../assets/images/vk.jpg";
-import ro from "../assets/images/ro.jpeg";
-import ms from "../assets/images/msd.jpeg";
-
+import axios from 'axios';
 const ResultItem = ({ imageSrc, emotion, details }) => (
     <div className='flex justify-between items-center mt-4'>
         <div>
@@ -21,7 +18,21 @@ const ResultItem = ({ imageSrc, emotion, details }) => (
 
 const Home = () => {
     const [previewImage, setPreviewImage] = useState(null);
-
+    const [emotionData, setEmotionData] = useState([]);
+    const fetchData = async () => {
+        try {
+          const id = localStorage.getItem("id");
+          const response = await axios.get(`http://localhost:8000/api/emotionHistory/${id}`);
+          const data = await response
+          console.log(data);
+          setEmotionData(data?.data).splice(0,3);
+        } catch (err) {
+          console.error(err);
+        }
+      }
+      useEffect(() => { 
+        fetchData();
+      }, []);
     const handleFileChange = (event) => {
         const file = event.target.files[0];
         if (file && file.type.startsWith('image/')) {
@@ -79,9 +90,9 @@ const Home = () => {
                         <h1 className='font-bold py-4 text-3xl'>Recent Results</h1>
                     </div>
                     <div>
-                        <ResultItem imageSrc={vk} emotion="Happy" details="Neutral: 0.2% Happy: 99% Sad: 0.1% Angry: 0.5% Surprised: 0.2% Confidence: 92%" />
-                        <ResultItem imageSrc={ro} emotion="Sad" details="Neutral: 1% Happy: 40% Sad: 59% Angry: 0.0% Surprised: 0.0% Confidence: 85%" />
-                        <ResultItem imageSrc={ms} emotion="Angry" details="Neutral: 12% Happy: 21% Sad: 0% Angry: 98% Surprised: 0.2% Confidence: 0.8%" />
+                        {emotionData.map((item, index) => (
+                            <ResultItem key={index} imageSrc={item.image} emotion={item.emotion} details={item.detected_at} />
+                        ))}
                     </div>
                 </div>
             </div>

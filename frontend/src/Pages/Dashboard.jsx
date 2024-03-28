@@ -63,7 +63,7 @@ const Dashboard = () => {
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ image: dataURL })
+                    body: JSON.stringify({ image: dataURL ,user_id:localStorage.getItem("id")})
                 });
 
                 const responseData = await response.json();

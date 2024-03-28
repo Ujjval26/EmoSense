@@ -7,6 +7,8 @@ from django.contrib.auth.hashers import check_password
 import jwt,datetime
 from django.http import JsonResponse
 import base64
+from emotion.models import EmotionHistory
+from .serializers import EmotionHistorySerializer
 from django.core.files.base import ContentFile
 from django.views.decorators.csrf import csrf_exempt
 
@@ -112,3 +114,30 @@ def edit_profile(request, pk):
         serializer.save()
         return JsonResponse({'message': 'Profile Updated Successfully','status':'success'}, status=200)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET'])
+def get_history(request,pk):
+    history = EmotionHistory.objects.filter(userId=pk)
+    serializer = EmotionHistorySerializer(history, many=True)
+    if history.exists():
+        return Response(serializer.data)
+    else:
+        return Response({'message': 'No history found for this user.'}, status=status.HTTP_404_NOT_FOUND)
+
+@api_view(['GET'])
+def get_all_data(request):
+    data = EmotionHistory.objects.all()
+    serializer = EmotionHistorySerializer(data, many=True)
+    if data.exists():
+        return Response(serializer.data)
+    else:
+        return Response({'message': 'No data found.'}, status=status.HTTP_404_NOT_FOUND)
+    
+@api_view(['GET'])
+def get_all_user(request):
+    data = Users.objects.all()
+    serializer = UserSerializer(data, many=True)
+    if data.exists():
+        return Response(serializer.data)
+    else:
+        return Response({'message': 'No data found.'}, status=status.HTTP_404_NOT_FOUND)

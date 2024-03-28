@@ -7,6 +7,9 @@ import Report from './Pages/Report'
 import Profile from './Pages/Profile'
 import EditProfile from './Pages/EditProfile'
 import Home from './Pages/Home'
+import Admin from './Pages/Admin'
+import Users from './Pages/Users'
+import RecordById from './Components/RecordById'
 function App() {
 
   return (
@@ -20,6 +23,9 @@ function App() {
           <Route path="/report" element={<Report />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/edit-profile" element={<EditProfile />} />
+          <Route path="/admin/emotion" element={<Admin />} />
+          <Route path="/admin/user" element={<Users />} />
+          <Route path="/admin/user/:id" element={<RecordById />} />
         </Routes>
       </Router>
     </>
