@@ -68,6 +68,6 @@ def predict_emotion(request):
         else:
             return JsonResponse({'error': 'Failed to save emotion data.'}, status=400)
 
-        return JsonResponse({'emotion': predicted_emotion})
+        return JsonResponse({'emotion': predicted_emotion,'prediction': prediction.tolist()})
     else:
         return JsonResponse({'error': 'Invalid request method or no image uploaded.'}, status=400)
