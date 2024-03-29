@@ -68,7 +68,7 @@ const Dashboard = () => {
 
                 const responseData = await response.json();
                 console.log(responseData);
-                setOutputData(responseData); // Store the response data in state
+                setOutputData(responseData.emotion); // Store the response data in state
             } catch (err) {
                 console.error('Error sending photo:', err);
             }
@@ -139,9 +139,7 @@ const Dashboard = () => {
                                 <div className='pl-6 pb-12'>
                                     <h2>Emotions Detected:</h2>
                                     <ul>
-                                        {outputData?.emotions?.map((emotion, index) => (
-                                            <li key={index}>{emotion}</li>
-                                        ))}
+                                       {outputData}
                                     </ul>
                                 </div>
                             )}

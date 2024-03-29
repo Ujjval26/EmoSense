@@ -15,6 +15,7 @@ class Images(models.Model):
 class EmotionHistory(models.Model):
     image = models.TextField()
     emotion = models.CharField(max_length=50)
+    prediction = models.JSONField()
     userId = models.CharField(max_length=50)
     detected_at = models.DateTimeField(auto_now_add=True)  
 

@@ -1,6 +1,7 @@
 import React, { useState,useEffect } from 'react';
 import Sidebar from '../Components/Sidebar';
 import axios from 'axios';
+import { redirect } from 'react-router-dom';
 
 const Report = () => {
     const [selectedButton, setSelectedButton] = useState('All');
@@ -25,7 +26,9 @@ const [imageData, setImageData] = useState([]);
         fetchData();
       }, []);
     const filteredImages = selectedButton === 'All' ? imageData : imageData.filter(image => image.emotion === selectedButton);
-
+      const redirectTo=(id)=>{
+        window.location.href = `/detailedInfo/${id}`;
+      }
     return (
         <div className="report-section flex min-h-screen bg-[#1a1a1a] text-white">
             <Sidebar />
@@ -48,7 +51,7 @@ const [imageData, setImageData] = useState([]);
                 </div>
               {filteredImages?.length>0?  <div className='grid gap-4 grid-cols-4'>
                {filteredImages.map((image) => (
-                    <div key={image.id} id={image.emotion}>
+                    <div key={image.id} id={image.emotion} className='hover:cursor-pointer' onClick={()=>redirectTo(image?.id)}>
                         <div className='w-64 h-64'><img src={image.image} alt={`Emotion ${image.emotion}`} className='w-64 h-64 rounded-md object-cover' /></div>
                         <div className='mt-2'>
                             <h1>Image {image.id}</h1>

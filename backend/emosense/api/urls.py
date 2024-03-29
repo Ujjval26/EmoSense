@@ -11,6 +11,7 @@ urlpatterns = [
     path('api/editProfile/<int:pk>',views.edit_profile),
     path('api/emotionHistory/<int:pk>',views.get_history),
     path('api/emotion/all',views.get_all_data),
+    path('api/emotion/<int:pk>',views.emotion_by_id),
     path('api/user/all',views.get_all_user),
     
     

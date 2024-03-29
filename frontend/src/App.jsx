@@ -10,6 +10,7 @@ import Home from './Pages/Home'
 import Admin from './Pages/Admin'
 import Users from './Pages/Users'
 import RecordById from './Components/RecordById'
+import DetailedInfo from './Components/DetailedInfo'
 function App() {
 
   return (
@@ -26,6 +27,7 @@ function App() {
           <Route path="/admin/emotion" element={<Admin />} />
           <Route path="/admin/user" element={<Users />} />
           <Route path="/admin/user/:id" element={<RecordById />} />
+          <Route path="/detailedInfo/:id" element={<DetailedInfo />} />
         </Routes>
       </Router>
     </>

@@ -10,8 +10,8 @@ import base64
 from django.core.files.base import ContentFile
 
 # Load the pre-trained model and cascade classifier
-classifier = load_model('C:/Users/shahp/Desktop/Ujjval/emosense/backend/emosense/api/model.h5')
-face_classifier = cv2.CascadeClassifier('C:/Users/shahp/Desktop/Ujjval/emosense/backend/emosense/api/haarcascade_frontalface_default.xml')
+classifier = load_model('C:/Users/shahp/Desktop/Ujjval/emosense/backend/emosense/api/emotion_detection_model-3.h5')
+# face_classifier = cv2.CascadeClassifier('C:/Users/shahp/Desktop/Ujjval/emosense/backend/emosense/api/haarcascade_frontalface_default.xml')
 emotion_labels = ['Angry', 'Disgust', 'Fear', 'Happy', 'Neutral', 'Sad', 'Surprise']
 
 @api_view(['POST'])
@@ -27,50 +27,47 @@ def predict_emotion(request):
         image_data = ContentFile(base64.b64decode(imgstr), name=f'uploaded_image.{ext}')
 
         # Process the image data
-        # Load the pre-trained model and cascade classifier
-        classifier = load_model('C:/Users/shahp/Desktop/Ujjval/emosense/backend/emosense/api/model.h5')
-        face_classifier = cv2.CascadeClassifier('C:/Users/shahp/Desktop/Ujjval/emosense/backend/emosense/api/haarcascade_frontalface_default.xml')
-        emotion_labels = ['Angry', 'Disgust', 'Fear', 'Happy', 'Neutral', 'Sad', 'Surprise']
+        # Load the pre-trained model
+        classifier = load_model('C:/Users/shahp/Desktop/Ujjval/emosense/backend/emosense/api/emotion_detection_model-3.h5')
+        emotion_labels =['Angry', 'Disgust', 'Fear', 'Happy', 'Sad', 'Surprise', 'Neutral']
 
         # Convert image data to OpenCV format
         nparr = np.frombuffer(image_data.read(), np.uint8)
         image_cv = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
 
-        # Detect faces in the image
+        # Convert to grayscale
         gray = cv2.cvtColor(image_cv, cv2.COLOR_BGR2GRAY)
-        faces = face_classifier.detectMultiScale(gray)
 
-        if len(faces) > 0:
-            # Process each detected face
-            emotions = []
-            for (x, y, w, h) in faces:
-                roi_gray = gray[y:y+h, x:x+w]
-                roi_gray = cv2.resize(roi_gray, (48, 48), interpolation=cv2.INTER_AREA)
+        # Resize image to fit the model's input shape
+        resized_image = cv2.resize(gray, (48, 48), interpolation=cv2.INTER_AREA)
+        resized_image = resized_image.astype('float') / 255.0
+        resized_image = np.expand_dims(resized_image, axis=0)
+        resized_image = np.expand_dims(resized_image, axis=3)
 
-                roi = roi_gray.astype('float') / 255.0
-                roi = np.expand_dims(roi, axis=0)
-                roi = np.expand_dims(roi, axis=3)
-
-                # Predict emotion for the face
-                prediction = classifier.predict(roi)[0]
-                label = emotion_labels[prediction.argmax()]
-                emotions.append(label)
-                
-                data = {
-                    'image': request.data['image'],
-                    'emotion': label,
-                    'userId': user_id
-                }
-                print(data)
-                serializer = EmotionHistorySerializer(data=data)
-                if serializer.is_valid():
-                    serializer.save()
-                else:
-                    print(serializer.errors)  
-                    return JsonResponse({'error': 'Failed to save emotion data.'}, status=400)
-
-            return JsonResponse({'emotions': emotions})
+        # Predict emotion for the image
+        prediction = classifier.predict(resized_image)
+        for i in range(len(prediction[0])):
+            print(emotion_labels[i], prediction[0][i])
+            
+        predicted_emotion_index = np.argmax(prediction)
+        predicted_emotion = emotion_labels[predicted_emotion_index]
+        
+        #convert prediction value  0 and 1       
+        # prediction = prediction[0][predicted_emotion_index] 
+        
+        
+        data = {
+            'image': request.data['image'],
+            'emotion': predicted_emotion,
+            'prediction': prediction.tolist(),
+            'userId': user_id
+        }
+        serializer = EmotionHistorySerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
         else:
-            return JsonResponse({'error': 'No faces detected in the image.'}, status=400)
+            return JsonResponse({'error': 'Failed to save emotion data.'}, status=400)
+
+        return JsonResponse({'emotion': predicted_emotion})
     else:
         return JsonResponse({'error': 'Invalid request method or no image uploaded.'}, status=400)

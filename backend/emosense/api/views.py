@@ -57,11 +57,8 @@ def signup(request):
     if user_email is None:
 
         serializer = UserSerializer(data=request.data)
-        print(serializer)
-        print(request.data)
         if serializer.is_valid():    
             serializer.save()
-            print(serializer.is_valid())
             return Response({'status': 'success', 'message': 'Data added successfully','email':email}, status=status.HTTP_201_CREATED)
         return Response({'status': 'error', 'message': 'Failed to add data'}, status=status.HTTP_400_BAD_REQUEST)
     else:
@@ -138,6 +135,17 @@ def get_all_user(request):
     data = Users.objects.all()
     serializer = UserSerializer(data, many=True)
     if data.exists():
+        return Response(serializer.data)
+    else:
+        return Response({'message': 'No data found.'}, status=status.HTTP_404_NOT_FOUND)
+    
+
+@api_view(['GET'])
+def emotion_by_id(request,pk):
+    data = EmotionHistory.objects.get(id=pk)
+    print(pk)
+    serializer = EmotionHistorySerializer(data)
+    if serializer.data is not None:
         return Response(serializer.data)
     else:
         return Response({'message': 'No data found.'}, status=status.HTTP_404_NOT_FOUND)
