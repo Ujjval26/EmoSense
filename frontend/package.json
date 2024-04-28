@@ -18,6 +18,8 @@
     "apexcharts": "^3.49.0",
     "axios": "^1.6.7",
     "face-api.js": "^0.20.0",
+    "gapi-script": "^1.2.0",
+    "opencv-react": "^0.0.6",
     "opencv.js": "^1.2.1",
     "react": "^18.2.0",
     "react-apexcharts": "^1.4.1",

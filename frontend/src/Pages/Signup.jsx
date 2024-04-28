@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import logo from "../assets/images/logo.png";
 import { Link } from "react-router-dom";
 import { FcGoogle } from "react-icons/fc";
@@ -9,7 +9,11 @@ import signup1 from "../assets/images/signup_1.png"
 import { Input } from 'antd';
 import { useState } from 'react'
 import { GoogleLogin } from 'react-google-login';
+<<<<<<< Updated upstream
 import { LoginSocialGoogle } from 'reactjs-social-login';
+=======
+import { gapi } from 'gapi-script'
+>>>>>>> Stashed changes
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -66,40 +70,21 @@ const Signup = () => {
     }
   };
 
-  const responseGoogle = (response) => {
-    console.log(response);
-    // Handle Google OAuth response here
-  };
+const login = () => {
+  const clientId = "1005163847995-ngh95j969boe2aivj4suvnkq0rc2ep8t.apps.googleusercontent.com";
+
+  useEffect(() => {
+    gapi.load("client:auth2", () => {
+      gapi.auth2.init({ clientId: clientId });
+    });
+  }, []); // The empty array [] means this effect will only run once, similar to componentDidMount
+};
 
 
-  const onLogin = async ({ provider, data }) => {
-    try {
-      const code = data;
-      console.log(code);
-      console.log(provider);
-
-      // Extracting user data from Google OAuth response
-      // const { email, name } = profileObj;
-
-      // Update form data with Google user data
-      // setFormData({
-      //   ...formData,
-      //   email,
-      //   name,
-      // });
-
-      // // Submit the form with the retrieved user data
-      // const formDataToSend = new FormData();
-      // formDataToSend.append('username', name);
-      // formDataToSend.append('email', email);
-      // formDataToSend.append('password', ''); // Since password is not provided by Google OAuth
-      // formDataToSend.append('age', '');
-      // formDataToSend.append('gender', '');
-      // formDataToSend.append('phone', '');
-    } catch (e) {
-      console.log(e);
-    }
-  };
+const responseGoogle = (response) => {
+  console.log(response);
+  // Handle Google OAuth response here
+};
 
 
   return (
