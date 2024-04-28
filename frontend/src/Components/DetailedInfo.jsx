@@ -36,7 +36,7 @@ const DetailedInfo = () => {
     return (
         <>
         <Sidebar />
-        <div className="w-full bg-[#242424] text-white pl-32 py-12">
+        <div className="w-full bg-[#242424] min-h-screen text-white pl-32 py-12">
             {loading && <div className='min-h-[90vh] flex items-center justify-center'><Loader /></div>}
             {error && <p>Error: {error}</p>}
             {emotionData && (

@@ -8,6 +8,8 @@ import { BsLightningChargeFill } from "react-icons/bs";
 import signup1 from "../assets/images/signup_1.png"
 import { Input } from 'antd';
 import { useState } from 'react'
+import { GoogleLogin } from 'react-google-login';
+
 const Signup = () => {
   const [formData, setFormData] = useState({
     name: '',
@@ -63,6 +65,11 @@ const Signup = () => {
     }
 };
 
+const responseGoogle = (response) => {
+  console.log(response);
+  // Handle Google OAuth response here
+};
+
 
   return (
     <section className="bg-[#F0F2F5]">
@@ -96,8 +103,19 @@ const Signup = () => {
               <h1 className='font-semibold text-xl text-center'>Get Started with MAKER</h1>
               <p className='text-gray-600 text-center'>Getting started is easy</p><br></br>
               <div className="flex text-center items-center justify-center">
-                <div className="flex text-center items-center justify-center border border-gray-300 bg-[white] px-8 py-2 rounded-md hover:cursor-pointer"><FcGoogle className="text-3xl" /> &nbsp;Google </div>
-                <div className="flex text-center items-center justify-center border border-gray-300 bg-[white] ml-4 px-8 py-2 rounded-md hover:cursor-pointer"><BsFacebook className="text-3xl text-[#3B5998]" /> &nbsp;Facebook </div>
+                {/* <div className="flex text-center items-center justify-center border border-gray-300 bg-[white] px-8 py-2 rounded-md hover:cursor-pointer"><FcGoogle className="text-3xl" /> &nbsp;Google </div> */}
+                <GoogleLogin
+                clientId="1005163847995-ngh95j969boe2aivj4suvnkq0rc2ep8t.apps.googleusercontent.com"
+                buttonText="Login with Google"
+                onSuccess={responseGoogle}
+                onFailure={responseGoogle}
+                cookiePolicy={'single_host_origin'}
+                className="flex text-center items-center justify-center border border-gray-300 bg-[white] px-8 py-2 rounded-md hover:cursor-pointer"
+                render={renderProps => (
+                  <FcGoogle onClick={renderProps.onClick} disabled={renderProps.disabled} className="text-3xl" />
+                )}
+              />
+                {/* <div className="flex text-center items-center justify-center  ml-4 px-8 py-2 rounded-md hover:cursor-pointer"><BsFacebook className="text-3xl text-[#3B5998]" /> &nbsp; </div> */}
 
               </div>
               <br></br>

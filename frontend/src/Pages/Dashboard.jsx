@@ -5,6 +5,8 @@ import { FiCameraOff } from "react-icons/fi";
 import { Link } from 'react-router-dom';
 import { toast, Toaster } from 'react-hot-toast';
 import Loader from '../Components/Loader';
+import * as tf from '@tensorflow/tfjs';
+import * as facemesh from '@tensorflow-models/face-landmarks-detection';
 
 const ResultItem = ({ timestamp, message }) => (
     <div className='text-sm text-green-500'>
@@ -23,6 +25,7 @@ const Dashboard = () => {
     const [logData, setLogData] = useState([]);
     const [outputData, setOutputData] = useState(null);
     const label = ['Angry', 'Disgust', 'Fear', 'Happy', 'Neutral', 'Sad', 'Surprise'];
+    const [facemeshModel, setFacemeshModel] = useState(null);
 
     const startVideoStream = () => {
         navigator.mediaDevices.getUserMedia({ video: true })
@@ -53,35 +56,62 @@ const Dashboard = () => {
     };
 
     const takePhoto = async () => {
-
-        if (videoRef.current) {
+        if (videoRef.current && canvasRef.current) {
             setLoading(true);
             const video = videoRef.current;
             const canvas = canvasRef.current;
             const context = canvas.getContext('2d');
             context.drawImage(video, 0, 0, canvas.width, canvas.height);
             const dataURL = canvas.toDataURL('image/png');
-
+    
             try {
                 const response = await fetch('http://localhost:8000/api/model/', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ image: dataURL ,user_id:localStorage.getItem("id")})
+                    body: JSON.stringify({ image: dataURL, user_id: localStorage.getItem("id") })
                 });
-
+    
+                if (!response.ok) {
+                    throw new Error('Failed to fetch predictions.');
+                }
+    
                 const responseData = await response.json();
                 console.log(responseData);
-            //     const normalizedData = responseData.prediction[0].map(value => value < 0 ? 0 : (value > 1 ? 1 : value));
-            // setOutputData({ ...response.data, prediction: [normalizedData] });
                 setOutputData(responseData); // Store the response data in state
+    
+                // Detect facial landmarks
+                const predictions = await facemeshModel?.estimateFaces(video, false);
+                console.log(predictions); // Check the predictions in the console
+    
+                if (predictions && predictions.length > 0) {
+                    predictions.forEach(prediction => {
+                        const keypoints = prediction.scaledMesh;
+    
+                        // Draw facial landmarks on the canvas
+                        context.beginPath();
+                        context.fillStyle = 'red'; // Color for landmarks
+                        for (let i = 0; i < keypoints.length; i++) {
+                            const [x, y] = keypoints[i];
+                            context.fillRect(x, y, 2, 2); // Draw a small rectangle at each landmark point
+                        }
+                        context.closePath();
+                    });
+                }
+    
+                setLoading(false);
             } catch (err) {
-                console.error('Error sending photo:', err);
+                console.error('Error processing photo:', err);
+                setLoading(false);
             }
-            setLoading(false)
+        } else {
+            console.error('Video or canvas element not found.');
+            setLoading(false);
         }
     };
+    
+    
 
     const fetchData = async () => {
         try {
@@ -109,6 +139,13 @@ const Dashboard = () => {
         fetchData();
         startVideoStream();
 
+        // Load facemesh model
+        async function loadFacemeshModel() {
+            const model = await facemesh.load();
+            setFacemeshModel(model);
+        }
+        loadFacemeshModel();
+
         return () => {
             stopVideoStream();
         };
@@ -123,48 +160,39 @@ const Dashboard = () => {
                     <h1 className='p-4 px-8 text-lg'>{data?.username}</h1>
                 </nav>
                 <div className="md:flex md:flex-row">
-                    <div className='w-[55%] px-4'>
-                        <div className='pl-4 relative' style={{ width: '640px', height: '360px' }}>
-                            <video ref={videoRef} autoPlay muted className="w-full h-full" style={{ borderRadius: '16px' }}></video>
+                    <div className='w-[75%] px-4'>
+                        <div className='pl-4 relative' style={{ width: '110%', height: '800px' }}>
+                            <video ref={videoRef} autoPlay muted className="w-full h-full" style={{ borderRadius: '16px', transform: 'scaleX(-1)' }}></video>
                             <canvas ref={canvasRef} style={{ display: 'none' }}></canvas>
                             <button className={`absolute bottom-8 left-1/2 transform -translate-x-1/2 p-4 text-white border border-white ${isCameraOn ? "" : "bg-red-500"} rounded-full mb-2`} onClick={toggleCamera}>
                                 {isCameraOn ? <FiCamera /> : <FiCameraOff />}
                             </button>
                         </div>
                         <div className='flex justify-center items-center w-full'>
-                        <button className="mt-4 p-2 px-8 bg-none border border-white text-white rounded-md" onClick={takePhoto}>Check Emotion</button>
+                            <button className="mt-4 p-2 px-8 bg-none border border-white text-white rounded-md" onClick={takePhoto}>Check Emotion</button>
                         </div>
                         <div>
-                        {loading?<div className='mx-12 p-8 mt-8 rounded-md  bg-[#2F2F2F]'><Loader /></div>:outputData && (
-                                    <div className='mx-12 p-8 mt-8 rounded-md  bg-[#2F2F2F]'>
-                                        <div className='flex'>
+                            {loading ? <div className='mx-12 p-8 mt-8 rounded-md  bg-[#2F2F2F]'><Loader /></div> : outputData && (
+                                <div className='mx-12 p-8 mt-8 rounded-md  bg-[#2F2F2F]'>
+                                    <div className='flex'>
                                         <h2>Emotions Detected:</h2>
                                         <p className='ml-2'>
-                                           {outputData?.emotion}
+                                            {outputData?.emotion}
                                         </p>
-                                        </div><br></br>
-                                        <p className='grid grid-cols-4'>{
-                                                outputData?.prediction[0]?.map((item,index)=>(
-                                                    <><span className='py-2'>{label[index]}: {(item.toFixed(2)*100).toFixed(2)}%</span><br></br></>
-
-                                                ))
-                                            }
-                                        </p>
-
                                     </div>
-                                )}
+                                    <br />
+                                    <p className='grid grid-cols-4'>{
+                                        outputData?.prediction[0]?.map((item, index) => (
+                                            <><span className='py-2'>{label[index]}: {(item.toFixed(2) * 100).toFixed(2)}%</span><br /></>
+
+                                        ))
+                                    }
+                                    </p>
+                                </div>
+                            )}
                         </div>
                     </div>
-                    <div className='w-[45%] p-4'>
-                        <div className='backdrop-blur-xl bg-white bg-opacity-10 rounded-xl max-h-[60vh] overflow-auto'>
-                            <h1 className='text-center items-center p-4 uppercase text-xl fixed mx-4'>Log</h1>                             
-                            <div className='text-sm pl-6 pb-12 pt-12'>
-                                {logData?.map((log, index) => (
-                                    <ResultItem key={index} timestamp={log.timestamp} message={log.message} />
-                                ))}
-                            </div>
-                        </div>
-                    </div>
+
                 </div>
             </div>
         </div>
