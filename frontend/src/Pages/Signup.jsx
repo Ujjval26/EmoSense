@@ -9,11 +9,7 @@ import signup1 from "../assets/images/signup_1.png"
 import { Input } from 'antd';
 import { useState } from 'react'
 import { GoogleLogin } from 'react-google-login';
-<<<<<<< Updated upstream
-import { LoginSocialGoogle } from 'reactjs-social-login';
-=======
 import { gapi } from 'gapi-script'
->>>>>>> Stashed changes
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -70,21 +66,49 @@ const Signup = () => {
     }
   };
 
-const login = () => {
   const clientId = "1005163847995-ngh95j969boe2aivj4suvnkq0rc2ep8t.apps.googleusercontent.com";
 
   useEffect(() => {
     gapi.load("client:auth2", () => {
-      gapi.auth2.init({ clientId: clientId });
-    });
-  }, []); // The empty array [] means this effect will only run once, similar to componentDidMount
-};
+      gapi.auth2.init({ clientId: clientId })
+    })
+  }, [])
 
 
-const responseGoogle = (response) => {
-  console.log(response);
-  // Handle Google OAuth response here
-};
+  const responseGoogle = (response) => {
+    console.log(response);
+    // Handle Google OAuth response here
+  };
+
+
+  const onLogin = async ({ provider, data }) => {
+    try {
+      const code = data;
+      console.log(code);
+      console.log(provider);
+
+      // Extracting user data from Google OAuth response
+      // const { email, name } = profileObj;
+
+      // Update form data with Google user data
+      // setFormData({
+      //   ...formData,
+      //   email,
+      //   name,
+      // });
+
+      // // Submit the form with the retrieved user data
+      // const formDataToSend = new FormData();
+      // formDataToSend.append('username', name);
+      // formDataToSend.append('email', email);
+      // formDataToSend.append('password', ''); // Since password is not provided by Google OAuth
+      // formDataToSend.append('age', '');
+      // formDataToSend.append('gender', '');
+      // formDataToSend.append('phone', '');
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
 
   return (
@@ -119,19 +143,47 @@ const responseGoogle = (response) => {
               <h1 className='font-semibold text-xl text-center'>Get Started with MAKER</h1>
               <p className='text-gray-600 text-center'>Getting started is easy</p><br></br>
               <div className="flex text-center items-center justify-center">
-                {/* <div className="flex text-center items-center justify-center border border-gray-300 bg-[white] px-8 py-2 rounded-md hover:cursor-pointer"><FcGoogle className="text-3xl" /> &nbsp;Google </div> */}                
-                <LoginSocialGoogle
-                  client_id='1005163847995-ngh95j969boe2aivj4suvnkq0rc2ep8t.apps.googleusercontent.com'
+                {/* <div className="flex text-center items-center justify-center border border-gray-300 bg-[white] px-8 py-2 rounded-md hover:cursor-pointer"><FcGoogle className="text-3xl" /> &nbsp;Google </div> */}
+                {/* <GoogleLogin
+                  clientId="131433883580-spmpe139h15le4dp0fj1us5ulovglmn9.apps.googleusercontent.comy"
+                  buttonText="Login with Google"
+                  onSuccess={responseGoogle}
+                  onFailure={responseGoogle}
+                  cookiePolicy={'single_host_origin'}
+                  className="flex text-center items-center justify-center border border-gray-300 bg-[white] px-8 py-2 rounded-md hover:cursor-pointer"
+                  render={renderProps => (
+                    <FcGoogle onClick={renderProps.onClick} disabled={renderProps.disabled} className="text-3xl" />
+                  )}
+                /> */}
+
+                {/* <LoginSocialGoogle
+                  isOnlyGetToken
+                  client_id="131433883580-spmpe139h15le4dp0fj1us5ulovglmn9.apps.googleusercontent.com"
                   onLoginStart={() => console.log('Login start')}
-                  redirect_uri="http://localhost:3000/signup"
+                  redirect_uri='http://localhost:3000/'
+                  scope='https://www.googleapis.com/auth/userinfo.email'
                   onResolve={onLogin}
                   access_type="offline"
                   onReject={err => {
                   }}
                 >
-
                   GOOGLE
-                </LoginSocialGoogle>
+                </LoginSocialGoogle> */}
+                <GoogleLogin
+                  clientId="1005163847995-ngh95j969boe2aivj4suvnkq0rc2ep8t.apps.googleusercontent.com"
+                  buttonText="Login with Google"
+                  onSuccess={responseGoogle}
+                  onFailure={responseGoogle}
+                  cookiePolicy={'single_host_origin'}
+                  // disbale popup and use redirect instead
+                  uxMode="redirect"
+
+                  className="flex text-center items-center justify-center border border-gray-300 bg-[white] px-8 py-2 rounded-md hover:cursor-pointer"
+                  render={renderProps => (
+                    <FcGoogle onClick={renderProps.onClick} disabled={renderProps.disabled} className="text-3xl" />
+                  )}
+                />
+                {/* <button onClick = {getUrl}>Login with google</button> */}
                 {/* <div className="flex text-center items-center justify-center  ml-4 px-8 py-2 rounded-md hover:cursor-pointer"><BsFacebook className="text-3xl text-[#3B5998]" /> &nbsp; </div> */}
 
               </div>

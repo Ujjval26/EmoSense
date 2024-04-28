@@ -11,6 +11,9 @@ from emotion.models import EmotionHistory
 from .serializers import EmotionHistorySerializer
 from django.core.files.base import ContentFile
 from django.views.decorators.csrf import csrf_exempt
+from urllib.parse import urlencode
+import requests
+
 
 
 # Load pre-trained InceptionResnetV1 model
@@ -149,3 +152,19 @@ def emotion_by_id(request,pk):
         return Response(serializer.data)
     else:
         return Response({'message': 'No data found.'}, status=status.HTTP_404_NOT_FOUND)
+
+
+@api_view(['POST'])
+def get_google_login_url(request):
+    # Construct the login URL
+    base_url = 'https://accounts.google.com/o/oauth2/v2/auth'
+    params = {
+        'client_id': '1005163847995-ngh95j969boe2aivj4suvnkq0rc2ep8t.apps.googleusercontent.com',
+        'redirect_uri': 'http://localhost:3000',
+        'response_type': 'code',
+        'scope': 'https://www.googleapis.com/auth/userinfo.profile',
+        # 'client_secret': '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',
+}
+    login_url = f'{base_url}?{urlencode(params)}'
+    
+    return JsonResponse({'login_url': login_url})
