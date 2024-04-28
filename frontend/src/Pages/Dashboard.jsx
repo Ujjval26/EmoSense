@@ -7,6 +7,9 @@ import { toast, Toaster } from 'react-hot-toast';
 import Loader from '../Components/Loader';
 import * as tf from '@tensorflow/tfjs';
 import * as facemesh from '@tensorflow-models/face-landmarks-detection';
+// import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
+import { PieChart, Pie, Tooltip, Legend,Cell } from 'recharts';
+
 
 const ResultItem = ({ timestamp, message }) => (
     <div className='text-sm text-green-500'>
@@ -24,7 +27,9 @@ const Dashboard = () => {
     const [data, setData] = useState();
     const [logData, setLogData] = useState([]);
     const [outputData, setOutputData] = useState(null);
-    const label = ['Angry', 'Disgust', 'Fear', 'Happy', 'Neutral', 'Sad', 'Surprise'];
+    const label = ['Angry', 'Disgust', 'Fear', 'Happy', 'Sad', 'Surprise', 'Neutral'];
+    const colors = ['#8884d8', '#82ca9d', '#ffc658', '#ff7300', '#00C49F', '#FF00FF', '#0088FE'];
+
     const [facemeshModel, setFacemeshModel] = useState(null);
 
     const startVideoStream = () => {
@@ -63,7 +68,7 @@ const Dashboard = () => {
             const context = canvas.getContext('2d');
             context.drawImage(video, 0, 0, canvas.width, canvas.height);
             const dataURL = canvas.toDataURL('image/png');
-    
+
             try {
                 const response = await fetch('http://localhost:8000/api/model/', {
                     method: 'POST',
@@ -72,23 +77,23 @@ const Dashboard = () => {
                     },
                     body: JSON.stringify({ image: dataURL, user_id: localStorage.getItem("id") })
                 });
-    
+
                 if (!response.ok) {
                     throw new Error('Failed to fetch predictions.');
                 }
-    
+
                 const responseData = await response.json();
                 console.log(responseData);
                 setOutputData(responseData); // Store the response data in state
-    
+
                 // Detect facial landmarks
                 const predictions = await facemeshModel?.estimateFaces(video, false);
                 console.log(predictions); // Check the predictions in the console
-    
+
                 if (predictions && predictions.length > 0) {
                     predictions.forEach(prediction => {
                         const keypoints = prediction.scaledMesh;
-    
+
                         // Draw facial landmarks on the canvas
                         context.beginPath();
                         context.fillStyle = 'red'; // Color for landmarks
@@ -99,7 +104,7 @@ const Dashboard = () => {
                         context.closePath();
                     });
                 }
-    
+
                 setLoading(false);
             } catch (err) {
                 console.error('Error processing photo:', err);
@@ -110,8 +115,8 @@ const Dashboard = () => {
             setLoading(false);
         }
     };
-    
-    
+
+
 
     const fetchData = async () => {
         try {
@@ -160,7 +165,7 @@ const Dashboard = () => {
                     <h1 className='p-4 px-8 text-lg'>{data?.username}</h1>
                 </nav>
                 <div className="md:flex md:flex-row">
-                    <div className='w-[75%] px-4'>
+                    <div className='px-4'>
                         <div className='pl-4 relative' style={{ width: '110%', height: '800px' }}>
                             <video ref={videoRef} autoPlay muted className="w-full h-full" style={{ borderRadius: '16px', transform: 'scaleX(-1)' }}></video>
                             <canvas ref={canvasRef} style={{ display: 'none' }}></canvas>
@@ -171,9 +176,9 @@ const Dashboard = () => {
                         <div className='flex justify-center items-center w-full'>
                             <button className="mt-4 p-2 px-8 bg-none border border-white text-white rounded-md" onClick={takePhoto}>Check Emotion</button>
                         </div>
-                        <div>
-                            {loading ? <div className='mx-12 p-8 mt-8 rounded-md  bg-[#2F2F2F]'><Loader /></div> : outputData && (
-                                <div className='mx-12 p-8 mt-8 rounded-md  bg-[#2F2F2F]'>
+                        <div className='w-full'>
+                            {loading ? <div className='mx-1 2 p-8 mt-8 rounded-md  bg-[#2F2F2F]'><Loader /></div> : outputData && (
+                                <div className='mx-12 p-8 mt-8 w-full rounded-md grid grid-cols-1  bg-[#2F2F2F]'>
                                     <div className='flex'>
                                         <h2>Emotions Detected:</h2>
                                         <p className='ml-2'>
@@ -188,6 +193,30 @@ const Dashboard = () => {
                                         ))
                                     }
                                     </p>
+                                    <div className='flex w-full items-center justify-center mt-12'>
+                                    <PieChart width={450} height={300}>
+                                        <Pie
+                                            data={outputData?.prediction[0].map((emotion, index) => ({
+                                                name: label[index],
+                                                value: emotion*100,
+                                            }))}
+                                            dataKey="value"
+                                            nameKey="name"
+                                            cx="50%"
+                                            cy="50%"
+                                            outerRadius={100}
+                                            label
+                                        >
+                                            {
+                                                outputData?.prediction[0].map((emotion, index) => (
+                                                    <Cell key={index} fill={colors[index % colors.length]} />
+                                                ))
+                                            }
+                                        </Pie>
+                                        <Tooltip />
+                                        <Legend />
+                                    </PieChart>
+                                    </div>
                                 </div>
                             )}
                         </div>

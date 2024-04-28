@@ -9,14 +9,15 @@ import signup1 from "../assets/images/signup_1.png"
 import { Input } from 'antd';
 import { useState } from 'react'
 import { GoogleLogin } from 'react-google-login';
+import { LoginSocialGoogle } from 'reactjs-social-login';
 
 const Signup = () => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
-    phone:'',
-    age:'',
-    gender:'',
+    phone: '',
+    age: '',
+    gender: '',
     password: '',
     rePassword: ''
   });
@@ -28,47 +29,77 @@ const Signup = () => {
   };
   const handleForm = async (e) => {
     e.preventDefault();
-    if((formData.name === '' || formData.email === '' || formData.password === '' || formData.rePassword === '' || formData.phone === '' || formData.age === '' || formData.gender === '')) {
-        alert('All fields are required');
-        return;
+    if ((formData.name === '' || formData.email === '' || formData.password === '' || formData.rePassword === '' || formData.phone === '' || formData.age === '' || formData.gender === '')) {
+      alert('All fields are required');
+      return;
     }
 
-    if(formData.password !== formData.rePassword) {
-        alert('Passwords do not match');
-        return;
+    if (formData.password !== formData.rePassword) {
+      alert('Passwords do not match');
+      return;
     }
     console.log(formData);
     // Create FormData object to send data
     const formDataToSend = new FormData();
     formDataToSend.append('username', formData.name);
     formDataToSend.append('email', formData.email);
-    formDataToSend.append('password', formData.password);   
-    formDataToSend.append('age', formData.age);   
-    formDataToSend.append('gender', formData.gender);   
-    formDataToSend.append('phone', formData.phone);   
+    formDataToSend.append('password', formData.password);
+    formDataToSend.append('age', formData.age);
+    formDataToSend.append('gender', formData.gender);
+    formDataToSend.append('phone', formData.phone);
     try {
-        const response = await fetch('http://localhost:8000/api/signup/', {
-            method: 'POST',
-            body: formDataToSend,
-        });
+      const response = await fetch('http://localhost:8000/api/signup/', {
+        method: 'POST',
+        body: formDataToSend,
+      });
 
-        const data = await response.json();
-        console.log(data);
+      const data = await response.json();
+      console.log(data);
 
-        if (data.status === 'success') {
-            window.location.replace('/login');
-        } else {
-            alert(data.message);          
-        }
+      if (data.status === 'success') {
+        window.location.replace('/login');
+      } else {
+        alert(data.message);
+      }
     } catch (err) {
-        console.error(err);
+      console.error(err);
     }
-};
+  };
 
-const responseGoogle = (response) => {
-  console.log(response);
-  // Handle Google OAuth response here
-};
+  const responseGoogle = (response) => {
+    console.log(response);
+    // Handle Google OAuth response here
+  };
+
+
+  const onLogin = async ({ provider, data }) => {
+    try {
+      const code = data;
+      console.log(code);
+      console.log(provider);
+
+      // Extracting user data from Google OAuth response
+      // const { email, name } = profileObj;
+
+      // Update form data with Google user data
+      // setFormData({
+      //   ...formData,
+      //   email,
+      //   name,
+      // });
+
+      // // Submit the form with the retrieved user data
+      // const formDataToSend = new FormData();
+      // formDataToSend.append('username', name);
+      // formDataToSend.append('email', email);
+      // formDataToSend.append('password', ''); // Since password is not provided by Google OAuth
+      // formDataToSend.append('age', '');
+      // formDataToSend.append('gender', '');
+      // formDataToSend.append('phone', '');
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
 
   return (
@@ -103,18 +134,19 @@ const responseGoogle = (response) => {
               <h1 className='font-semibold text-xl text-center'>Get Started with MAKER</h1>
               <p className='text-gray-600 text-center'>Getting started is easy</p><br></br>
               <div className="flex text-center items-center justify-center">
-                {/* <div className="flex text-center items-center justify-center border border-gray-300 bg-[white] px-8 py-2 rounded-md hover:cursor-pointer"><FcGoogle className="text-3xl" /> &nbsp;Google </div> */}
-                <GoogleLogin
-                clientId="1005163847995-ngh95j969boe2aivj4suvnkq0rc2ep8t.apps.googleusercontent.com"
-                buttonText="Login with Google"
-                onSuccess={responseGoogle}
-                onFailure={responseGoogle}
-                cookiePolicy={'single_host_origin'}
-                className="flex text-center items-center justify-center border border-gray-300 bg-[white] px-8 py-2 rounded-md hover:cursor-pointer"
-                render={renderProps => (
-                  <FcGoogle onClick={renderProps.onClick} disabled={renderProps.disabled} className="text-3xl" />
-                )}
-              />
+                {/* <div className="flex text-center items-center justify-center border border-gray-300 bg-[white] px-8 py-2 rounded-md hover:cursor-pointer"><FcGoogle className="text-3xl" /> &nbsp;Google </div> */}                
+                <LoginSocialGoogle
+                  client_id='1005163847995-ngh95j969boe2aivj4suvnkq0rc2ep8t.apps.googleusercontent.com'
+                  onLoginStart={() => console.log('Login start')}
+                  redirect_uri="http://localhost:3000/signup"
+                  onResolve={onLogin}
+                  access_type="offline"
+                  onReject={err => {
+                  }}
+                >
+
+                  GOOGLE
+                </LoginSocialGoogle>
                 {/* <div className="flex text-center items-center justify-center  ml-4 px-8 py-2 rounded-md hover:cursor-pointer"><BsFacebook className="text-3xl text-[#3B5998]" /> &nbsp; </div> */}
 
               </div>
@@ -160,18 +192,18 @@ const responseGoogle = (response) => {
                 placeholder="Gender" className='gender bg-white p-4 border border-gray-300 w-full rounded-md outline-none' />
             </div>
             <div className="mb-5">
-              <Input.Password 
-              id='password'
-              value={formData.password}
-              onChange={handleInputChange}
-              placeholder="Password" className='password bg-white p-4 border border-gray-300 w-full rounded-md outline-none' />
+              <Input.Password
+                id='password'
+                value={formData.password}
+                onChange={handleInputChange}
+                placeholder="Password" className='password bg-white p-4 border border-gray-300 w-full rounded-md outline-none' />
             </div>
             <div className="mb-5">
-              <Input.Password 
-              id='rePassword'
-              value={formData.rePassword}
-              onChange={handleInputChange}
-              placeholder="Retype Password" className='rePassword bg-white p-4 border border-gray-300 w-full rounded-md outline-none' />
+              <Input.Password
+                id='rePassword'
+                value={formData.rePassword}
+                onChange={handleInputChange}
+                placeholder="Retype Password" className='rePassword bg-white p-4 border border-gray-300 w-full rounded-md outline-none' />
             </div>
 
             <button type="button" onClick={handleForm} className="border border-[#20DC49] items-center text-white bg-[#20DC49] rounded-md w-full px-8 py-2">Create Account</button>

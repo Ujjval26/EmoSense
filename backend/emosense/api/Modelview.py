@@ -10,9 +10,9 @@ import base64
 from django.core.files.base import ContentFile
 
 # Load the pre-trained model and cascade classifier
-classifier = load_model('backend/emosense/api/facialemotionmodel.h5')
+classifier = load_model('C:/Users/shahp/Desktop/IBM Projects/Ujjval/emosense/backend/emosense/api/facialemotionmodel.h5')
 face_classifier = cv2.CascadeClassifier('C:/Users/shahp/Desktop/Ujjval/emosense/backend/emosense/api/haarcascade_frontalface_default.xml')
-emotion_labels = ['angry', 'disgust', 'fear', 'happy', 'neutral', 'sad', 'surprise']
+# emotion_labels = ['angry', 'disgust', 'fear', 'happy', 'neutral', 'sad', 'surprise']
 
 @api_view(['POST'])
 @csrf_exempt
@@ -28,7 +28,7 @@ def predict_emotion(request):
 
         # Process the image data
         # Load the pre-trained model
-        classifier = load_model('backend/emosense/api/facialemotionmodel.h5')
+        classifier = load_model('C:/Users/shahp/Desktop/IBM Projects/Ujjval/emosense/backend/emosense/api/model.h5')
         emotion_labels =['Angry', 'Disgust', 'Fear', 'Happy', 'Sad', 'Surprise', 'Neutral']
 
         # Convert image data to OpenCV format
@@ -50,7 +50,11 @@ def predict_emotion(request):
             print(emotion_labels[i], prediction[0][i])
             
         predicted_emotion_index = np.argmax(prediction)
+        # keep prediction to 2 decimal places
         predicted_emotion = emotion_labels[predicted_emotion_index]
+        
+        
+        # predicted_emotion = emotion_labels[predicted_emotion_index]
         
         #convert prediction value  0 and 1       
         # prediction = prediction[0][predicted_emotion_index] 
@@ -71,3 +75,5 @@ def predict_emotion(request):
         return JsonResponse({'emotion': predicted_emotion,'prediction': prediction.tolist()})
     else:
         return JsonResponse({'error': 'Invalid request method or no image uploaded.'}, status=400)
+
+
