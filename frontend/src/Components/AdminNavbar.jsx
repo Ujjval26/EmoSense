@@ -11,6 +11,10 @@ const items = [
     label:  <Link to={"/admin/user"}>Users</Link>,
     key: 'users',
   },
+  {
+    label:<Link to={"/logout"}>Logout</Link>,
+    key: 'logout',
+  }
  
 ];
 const AdminNavbar = () => {

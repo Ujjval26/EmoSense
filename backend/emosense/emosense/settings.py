@@ -102,15 +102,29 @@ WSGI_APPLICATION = 'emosense.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME':'emosense',
+#         'USER':'root',
+#         'PASSWORD':'root',
+#         'HOST':'localhost',
+#         'PORT':'3306',
+#     }
+# }
+
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME':'emosense',
-        'USER':'root',
-        'PASSWORD':'root',
-        'HOST':'localhost',
-        'PORT':'3306',
-    }
+  'default': {
+    'ENGINE': 'django.db.backends.postgresql',
+    'NAME': "emosense",
+    'USER': 'fpd_owner',
+    'PASSWORD': 'lnUR1hYDj2dp',
+    'HOST':'ep-curly-voice-a1c14j9s.ap-southeast-1.aws.neon.tech',
+    'PORT': 5432,
+    'OPTIONS': {
+      'sslmode': 'require',
+    },
+  }
 }
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators

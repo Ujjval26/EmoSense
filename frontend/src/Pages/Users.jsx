@@ -4,8 +4,10 @@ import axios from "axios";
 import { useEffect, useState } from 'react';
 import AdminNavbar from '../Components/AdminNavbar';
 import { Link } from 'react-router-dom';
+import Loader from '../Components/Loader';
 const Users = () => {
 const [emotionData, setEmotionData] = useState([]);  
+const [loading, setLoading] = useState(false);
       const columns = [
         {
             title: 'Index',
@@ -51,6 +53,7 @@ const [emotionData, setEmotionData] = useState([]);
         },      
       ];
       const fetchData = async () => {
+        setLoading(true);
         try {
           const id = localStorage.getItem("id");
           const response = await axios.get(`http://localhost:8000/api/user/all`);
@@ -60,6 +63,7 @@ const [emotionData, setEmotionData] = useState([]);
         } catch (err) {
           console.error(err);
         }
+        setLoading(false);
       }
       useEffect(() => { 
         fetchData();
@@ -69,7 +73,9 @@ const [emotionData, setEmotionData] = useState([]);
           <div className='p-12'>
             <h1 className='font-bold text-lg py-4'>All Users</h1>
             <div>
-        <Table dataSource={emotionData} columns={columns} />
+        {loading?<div className='min-h-[70vh] flex w-full justify-center items-center'> 
+          <Loader />
+        </div>:<Table dataSource={emotionData} columns={columns} />}
         </div>
       
     </div>

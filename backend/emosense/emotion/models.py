@@ -28,5 +28,6 @@ class Users(models.Model):
     gender = models.CharField(max_length=10)
     phone = models.CharField(max_length=15)
     created_at = models.TimeField(auto_now_add=True)
+    otp = models.CharField(max_length=6)
     # last_login = models.TimeField()
    

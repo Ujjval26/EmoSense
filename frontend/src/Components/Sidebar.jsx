@@ -4,7 +4,8 @@ import {
   UserOutlined,
   HomeOutlined,
   CameraFilled,
-  BarChartOutlined
+  BarChartOutlined,
+  LogoutOutlined
 } from '@ant-design/icons';
 import { Layout, Menu } from 'antd';
 
@@ -24,7 +25,8 @@ const items = [
   getItem('User', '1', <UserOutlined />, '/profile'),
   getItem('Report', '2', <BarChartOutlined />, '/report'),
   getItem('Camera', '3', <CameraFilled />, '/dashboard'),
-  getItem('Home', '4', <HomeOutlined />, '/')
+  getItem('Home', '4', <HomeOutlined />, '/'),
+  getItem('Logout', '5', <LogoutOutlined />, '/logout')
 ];
 
 const Sidebar = () => {

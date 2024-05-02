@@ -10,7 +10,8 @@ import { Input } from 'antd';
 import { useState } from 'react'
 import { GoogleLogin } from 'react-google-login';
 import { gapi } from 'gapi-script'
-
+import { toast,Toaster } from 'react-hot-toast';
+import Loader from '../Components/Loader';
 const Signup = () => {
   const [formData, setFormData] = useState({
     name: '',
@@ -21,6 +22,7 @@ const Signup = () => {
     password: '',
     rePassword: ''
   });
+  const [loading, setLoading] = useState(false);
   const handleInputChange = (e) => {
     setFormData({
       ...formData,
@@ -28,14 +30,15 @@ const Signup = () => {
     });
   };
   const handleForm = async (e) => {
+    setLoading(true);
     e.preventDefault();
     if ((formData.name === '' || formData.email === '' || formData.password === '' || formData.rePassword === '' || formData.phone === '' || formData.age === '' || formData.gender === '')) {
-      alert('All fields are required');
+      toast.error('All fields are required');
       return;
     }
 
     if (formData.password !== formData.rePassword) {
-      alert('Passwords do not match');
+      toast.error('Passwords do not match');
       return;
     }
     console.log(formData);
@@ -57,13 +60,19 @@ const Signup = () => {
       console.log(data);
 
       if (data.status === 'success') {
+        toast.success(data.message);
+        localStorage.setItem('isVerified', "false");
+        const timer = setTimeout(() => {
         window.location.replace('/login');
+        }, 1200);
+        return () => clearTimeout(timer);
       } else {
-        alert(data.message);
+        toast.error(data.message);
       }
     } catch (err) {
       console.error(err);
     }
+    setLoading(false);
   };
 
   const clientId = "1005163847995-ngh95j969boe2aivj4suvnkq0rc2ep8t.apps.googleusercontent.com";
@@ -114,7 +123,7 @@ const Signup = () => {
   return (
     <section className="bg-[#F0F2F5]">
       <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet"></link>
-
+      <Toaster />
       <div className="lg:grid lg:grid-cols-2 min-h-screen" style={{ gridTemplateColumns: '40% 60%' }}>
         <div className='relative max-h-screen min-h-screen overflow-hidden lg:sticky top-0 lg:inline md:hidden sm:hidden xl:inline hidden'>
           <img src={signup} alt="signup" className="w-full min-h-screen max-h-screen object-cover" />
@@ -243,7 +252,10 @@ const Signup = () => {
                 placeholder="Retype Password" className='rePassword bg-white p-4 border border-gray-300 w-full rounded-md outline-none' />
             </div>
 
-            <button type="button" onClick={handleForm} className="border border-[#20DC49] items-center text-white bg-[#20DC49] rounded-md w-full px-8 py-2">Create Account</button>
+            <button type="button" onClick={handleForm} className="border border-[#20DC49] items-center text-white bg-[#20DC49] rounded-md w-full px-8 py-2">{
+              loading ? <Loader small={true} /> : 'Create Account'
+            
+            }</button>
           </form><br></br>
           <div className='w-full px-12'>
             <p className='text-center text-gray-800 text-sm'>By continuing you indicate that you read and agreed to the Terms of Use</p>

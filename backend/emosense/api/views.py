@@ -13,7 +13,10 @@ from django.core.files.base import ContentFile
 from django.views.decorators.csrf import csrf_exempt
 from urllib.parse import urlencode
 import requests
-
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+import random
 
 
 # Load pre-trained InceptionResnetV1 model
@@ -58,17 +61,122 @@ def signup(request):
         user_email= None
    
     if user_email is None:
+        generated_otp = str(random.randint(100000, 999999))
+        send_otp_email(email, generated_otp)
 
-        serializer = UserSerializer(data=request.data)
+        # serializer = UserSerializer(data={'email': email, 'mobile': mobile, 'otp': generated_otp})        
+        mutable_data = request.data.copy()
+        mutable_data['otp'] = generated_otp
+    
+    # Pass the mutable data to the serializer
+        serializer = UserSerializer(data=mutable_data)
+        print(mutable_data)
+        print(serializer)
+        print(serializer.is_valid())
+        # serializer = UserSerializer(data={'email': email, 'mobile': mobile, 'otp': generated_otp})        
         if serializer.is_valid():    
             serializer.save()
-            return Response({'status': 'success', 'message': 'Data added successfully','email':email}, status=status.HTTP_201_CREATED)
-        return Response({'status': 'error', 'message': 'Failed to add data'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'status': 'success', 'message': 'User Created Successfully','email':email}, status=status.HTTP_201_CREATED)
+        return Response({'status': 'error', 'message': 'Failed to add data'}, status=status.HTTP_400_BAD_REQUEST)        
     else:
         if user_email is not None:
             return Response({'status': 'error', 'message': 'Email already exists'}, status=status.HTTP_400_BAD_REQUEST)
         else:
             return Response({'status': 'error', 'message': 'Failed to add data'}, status=status.HTTP_400_BAD_REQUEST)
+
+def send_otp_email(receiver_email, otp):
+    sender_email = "shahpurav308@gmail.com"
+    sender_password = "npgb ndoe saio zghl"
+    # Send the OTP to the user's email using Django's send_mail function
+    subject = f'Otp for verification'
+    message_content = f'''
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {{
+      font-family: 'Google Sans', 'Roboto', sans-serif; /* Google's fonts */
+      background-color: #f6f8fa;
+      margin: 0;
+      padding: 0;
+    }}
+
+    .container {{
+      max-width: 600px;
+      margin: 20px auto;
+      background-color: #ffffff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(60,64,67,.15); /* Subtle shadow */
+      color: #202124; /* Google's primary text color */
+    }}
+
+    h1 {{
+      color: #1a73e8; /* Google's blue */
+    }}
+
+    p {{
+      color: #5f6368; 
+      line-height: 1.6;
+      }}
+
+    .otp-container {{
+      background-color: #e8f0fe; /* Lighter blue for less contrast */
+      color: #1a73e8; /* Same blue as header for consistency */
+      padding: 15px;
+      border-radius: 5px;
+      margin-top: 20px;
+      text-align: center;
+      font-size: 24px;
+      display: inline-block;
+      }}
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>OTP</h1>
+    <p>Dear User,</p>
+    <p>Your OTP for login is:</p>
+    
+    <div class="otp-container">
+      <strong>{ otp }</strong> 
+    </div>
+  </div>
+
+</body>
+</html>
+'''
+    message = MIMEMultipart()
+    message['From'] = sender_email
+    message['To'] = receiver_email
+    message['Subject'] = "OTP For Signup Verification"
+
+# Attach the HTML content to the email
+    message.attach(MIMEText(message_content, 'html'))
+
+# Connect to the SMTP server and send the email
+    with smtplib.SMTP('smtp.gmail.com', 587) as server:
+        server.starttls()
+        server.login(sender_email, sender_password)
+        server.sendmail(sender_email, receiver_email, message.as_string())
+
+
+@api_view(['POST'])
+def checkOtp(request,pk):
+    items = Users.objects.get(id=pk)
+    otp = request.data.get('otp')
+    otp = str(otp)
+    otp_1 = str(items.otp)
+    print(otp)
+    print(items.otp) 
+    if otp_1 == otp:
+        return Response({'status': 'success', 'message': 'User authenticated'}, status=status.HTTP_200_OK)
+    else:
+        return Response({'status': 'error', 'message': 'Wrong OTP'}, status=status.HTTP_400_BAD_REQUEST)
+
 
 @api_view(['POST'])
 @csrf_exempt
